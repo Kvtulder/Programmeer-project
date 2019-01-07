@@ -16,11 +16,38 @@ You can divide every transactions into a category
 
 ## Activities:
 
-Overview acticity
+### Overview acticity
 
-![hoi]()
+<img src="sketch_main_activity.jpeg" alt="Overview acticity" width="400"/>
 
-[optional feature] 
+In the overview activity you can see how much you've spent and how much you've earned. The top bar consists of the app title and 3 buttons to navigate to other activities. The first button is the 'process transactions' button. The second button gives you an overview of all your transactions, and the third button gives you an overview of all your created groups.
+
+### Process transactions activity
+
+<img src="sketch_verwerk_transacties.jpeg" alt="Overview acticity" width="400"/>
+
+This activity allows you to divide your transactions into categories. You can swipe trough every transaction and select a suitable category. 
+[optional feature] If I've enough time, I'll implement a feature that automatically selects a category if the transaction account number and/or amount matches another transaction. 
+
+### Transaction overview activity
+
+<img src="sketch_transactie_overzicht.jpeg" alt="Overview acticity" width="400"/>
+
+There will also be a general overview of all your transactions. This listviews contains all the transactions that are already in a category. 
+
+
+### Group overview activity
+
+<img src="sketch_groep_overzicht.jpeg" alt="Overview acticity" width="400"/>
+
+This activity allows you to create new categories and delete them. Press a category to edit/ or create one
+
+### Create/edit category
+
+<img src="sketch_create_group.jpeg" alt="Overview acticity" width="400"/>
+
+This activity allows you to edit a category or create a new one.
+
 
 ## Prerequisites
 
