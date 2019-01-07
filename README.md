@@ -27,7 +27,7 @@ In the overview activity you can see how much you've spent and how much you've e
 <img src="sketch_verwerk_transacties.jpeg" alt="Overview acticity" width="400"/>
 
 This activity allows you to divide your transactions into categories. You can swipe trough every transaction and select a suitable category. 
-[optional feature] If I've enough time, I'll implement a feature that automatically selects a category if the transaction account number and/or amount matches another transaction. 
+[optional feature] If I've enough time, I'll implement a feature that automatically selects a category if the transaction account number and/or amount matches another transaction. Any Chart for android
 
 ### Transaction overview activity
 
@@ -58,5 +58,14 @@ The apps downloads your transactions from the ing api. First it authencates the 
 ### Libraries
 
 The app uses Any Chart for android to create a pie chart. 
+
+### Similar apps
+
+Similar apps don't have the same kind of interface, because they also have a lot more functions. This apps tends to give you insight in your spendings in the most easy way, without too many functions and or options: just a simple overview. They also don't download your transactions automatically, because the PSD2 api is only released in 2019.
+
+### Hardest part
+
+The hardest part will be connection with the ING API. The api itself is well documented but still a bit unclear. The connections uses own created RSA certificates, signatures and SHA hashes. 
+
 
 
