@@ -51,9 +51,12 @@ This activity allows you to edit a category or create a new one.
 
 ## Prerequisites
 
-- The ING API
-- A pie chart library: i.e. Any Chart for android
+### External sources
 
+The apps downloads your transactions from the ing api. First it authencates the application by retrieving an aplication access code. Then it authenticates the user by retreiving a user acces token. With the user access token we can download the transactions.
 
+### Libraries
+
+The app uses Any Chart for android to create a pie chart. 
 
 
