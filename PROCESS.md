@@ -3,7 +3,7 @@
 ## day 2
 
 ### Design
-Starting to implement the design. I found out that the proposed pie chart library (Any chart for android) is'nt free. So im currently looking for alternatives. Currently looking at MPAndroidChart.
+Starting to implement the design. I found out that the proposed pie chart library (Any chart for android) isn't free. So im currently looking for alternatives. Currently looking at MPAndroidChart.
 
 ### API
 
