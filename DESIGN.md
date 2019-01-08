@@ -41,13 +41,13 @@ Every line is a new transaction. I'll need to read every transaction and check i
 The application will contain 3 local SQL databases. One database for al the transactions, one for the categories and one for the linked a
 
 ### Transaction db structure
-TYPE NAME PROPERTIES
-Int ID NOT NULL AUTOINCREMENT
-Text Name NOT NULL
-double amount NOT NULL
-Text IBAN NOT NULL
-Text description
-INT CATEGORY_ID 
+TYPE NAME PROPERTIES  
+Int ID NOT NULL AUTOINCREMENT  
+Text Name NOT NULL  
+double amount NOT NULL  
+Text IBAN NOT NULL  
+Text description  
+INT CATEGORY_ID   
 
 ### Category db structue
 
@@ -58,10 +58,10 @@ TEXT logo
 
 ### Linked AccountNumbers
 
-TYPE NAME PROPERTIES
-INT ID NOT NULL AUTOINCREMENT
-TEXT Iban NOT NULL
-DOUBLE amount
-INT CATEGORY_ID NOT NULL
+TYPE NAME PROPERTIES  
+INT ID NOT NULL AUTOINCREMENT  
+TEXT Iban NOT NULL  
+DOUBLE amount  
+INT CATEGORY_ID NOT NULL  
 
 
