@@ -13,16 +13,22 @@ Every line is a new transaction. I'll need to read every transaction and check i
  
 ## Advanced sketches of UI
 
+I could'nt fit all the activities in one sketch so I've added a sketch for every activity
+
 ### Main Activity
 
 ### Transaction overview
 
-<img src="Transaction_overview.png">
+<img src="Images/design/Transaction_overview.png">
 
 ### process Transaction
 
-<img src="processTransaction.png">
+<img src="Images/design/processTransaction.png">
 
 ### manage categories
 
-<img src="manage_categories.png">
+<img src="Images/design/manage_categories.png">
+
+### Read CSV
+
+<img src="Images/design/CSVReader.png">
