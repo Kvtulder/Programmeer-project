@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Insight</string>
+    <string name="title_activity_transaction_over_view">Transaction Overview</string>
+    <string name="title_activity_csvreader">Read new transactions</string>
+    <string name="title_activity_manage_categories">Categories</string>
+    <string name="title_activity_process_transactions">Process transacions</string>
+</resources>
