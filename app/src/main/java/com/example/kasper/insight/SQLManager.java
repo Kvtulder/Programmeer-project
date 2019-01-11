@@ -1,6 +1,47 @@
 package com.example.kasper.insight;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
 public class SQLManager {
+
+    private static String TABLENAME_TRANSACTIONS = "transactions";
+    private static String TABLENAME_CATEGORIES = "categories";
+
+
+
+    private class Transactions extends SQLiteOpenHelper{
+
+        
+
+        public Transactions(@Nullable Context context, @Nullable String name,
+                            @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+
+            super(context, name, factory, version);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+
+            String query = "CREATE TABLE " + TABLENAME_TRANSACTIONS + "(" +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name TEXT NOT NULL," +
+                    "description TEXT," +
+                    "amount DOUBLE NOT NULL," +
+                    "IBAN TEXT NOT NULL," +
+                    "categoryID INT );";
+
+            db.execSQL(query);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        }
+    }
 
     public TransactionObject[] getTransactions(){
 
@@ -31,5 +72,4 @@ public class SQLManager {
 
         return array;
     }
-
 }
