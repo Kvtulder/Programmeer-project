@@ -13,7 +13,7 @@ public class ProcressTransactionsActivity extends AppCompatActivity {
 
         ViewPager viewPager = findViewById(R.id.pager);
         TransactionFragmentStatePagerAdapter adapter =
-                new TransactionFragmentStatePagerAdapter(getSupportFragmentManager());
+                new TransactionFragmentStatePagerAdapter(this, getSupportFragmentManager());
 
         viewPager.setAdapter(adapter);
 

@@ -20,7 +20,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
         this.context = context;
 
-        sqlManager = new SQLManager();
+        sqlManager = SQLManager.getInstance(context);
         categories = sqlManager.getCategories();
     }
 

@@ -20,7 +20,7 @@ public class TransactionListAdapter extends BaseAdapter {
         this.context = context;
 
         // get the transactions from the local database
-        SQLManager sqlManager = new SQLManager();
+        SQLManager sqlManager = SQLManager.getInstance(context);
         transactions = sqlManager.getTransactions();
 
     }

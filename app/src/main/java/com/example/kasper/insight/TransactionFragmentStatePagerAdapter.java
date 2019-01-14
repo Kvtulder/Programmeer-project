@@ -20,10 +20,10 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
     Context context;
 
 
-    public TransactionFragmentStatePagerAdapter(FragmentManager fm) {
+    public TransactionFragmentStatePagerAdapter(Context context, FragmentManager fm) {
 
         super(fm);
-        sqlManager = new SQLManager();
+        sqlManager = SQLManager.getInstance(context);
         transactions = sqlManager.getTransactions();
 
 
