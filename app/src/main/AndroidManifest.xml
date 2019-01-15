@@ -47,10 +47,10 @@
             android:name=".ProcressTransactionsActivity"
             android:label="@string/title_activity_process_transactions">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.kasper.insight.InsightActivity" />
-
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kasper.insight.InsightActivity" />
         </activity>
+        <activity android:name=".CategoryViewActivity"></activity>
     </application>
 
 </manifest>

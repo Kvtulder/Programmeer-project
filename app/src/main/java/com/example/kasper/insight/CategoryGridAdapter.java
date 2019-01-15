@@ -9,10 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class CategoryGridAdapter extends BaseAdapter {
 
     private SQLManager sqlManager;
-    private CategoryObject[] categories;
+    private ArrayList<CategoryObject> categories;
 
     Context context;
 
@@ -26,12 +28,12 @@ public class CategoryGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return categories.length;
+        return categories.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return categories[position];
+        return categories.get(position);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class CategoryGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        CategoryObject category = categories[position];
+        CategoryObject category = categories.get(position);
 
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(context);

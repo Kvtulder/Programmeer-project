@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
+import java.util.ArrayList;
 import androidx.annotation.Nullable;
 
 public class SQLManager extends SQLiteOpenHelper {
@@ -31,16 +31,27 @@ public class SQLManager extends SQLiteOpenHelper {
         return instance;
     }
 
-    public TransactionObject[] getTransactions(){
-
-
-
+    public ArrayList<TransactionObject> getTransactions(){
         SQLiteDatabase database = getWritableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS,null);
 
-        // TODO Fix this horrible code
-        TransactionObject[] array = new TransactionObject[1];
+        // transform database results to usable data and return the result
+        return cursorToTransactionList(cursor);
 
+    }
+
+    public ArrayList<CategoryObject> getCategories(){
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES,null);
+
+        return cursorToCategoryList(cursor);
+
+    }
+
+    // Transforms the cursor from the database into an arraylist with transactions
+    private ArrayList<TransactionObject> cursorToTransactionList(Cursor cursor){
+
+        ArrayList<TransactionObject> list = new ArrayList<>();
         if(cursor.moveToFirst()){
 
             // loop as long as there still are rows left
@@ -52,33 +63,36 @@ public class SQLManager extends SQLiteOpenHelper {
                 double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
 
                 TransactionObject transaction = new TransactionObject(IBAN, name, description, amount);
-
-                array[0] = transaction;
-                return array;
-
+                list.add(transaction);
             }
             while (cursor.moveToNext());
 
             // remove from memory
-            //cursor.close();
+            cursor.close();
         }
 
-        // Create some  fake transactions for testing purposes
-
-        TransactionObject object1 = new TransactionObject("NL03 IGNB 0003 2577 45",
-                "HEMA", "Volgnummer 0004344 Pasnummer 34545", -7.48, getCategories()[2]);
-        TransactionObject object2 = new TransactionObject("NL03 IGNB 0003 1234 45",
-                "GAMMA", "Volgnummer 0004344 Pasnummer 34545", -4.38, getCategories()[1]);
-        TransactionObject object3 = new TransactionObject("NL03 IGNB 0003 2342 45",
-                "Lidl", "Volgnummer 0004344 Pasnummer 34545", -23.20);
-
-
-
-        return array;
-
+        return list;
     }
 
-    public CategoryObject[] getCategories(){
+    public ArrayList<CategoryObject> cursorToCategoryList(Cursor cursor){
+
+        ArrayList<CategoryObject> list = new ArrayList<>();
+
+        if(cursor.moveToFirst()) {
+
+            // loop as long as there still are rows left
+            do {
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                int drawable = cursor.getInt(cursor.getColumnIndex("drawable"));
+
+                CategoryObject category = new CategoryObject(name, drawable);
+                list.add(category);
+            }
+            while (cursor.moveToNext());
+
+            //remove from memory
+            cursor.close();
+        }
 
         // Create some fake categories for testing purposes
 
@@ -86,9 +100,8 @@ public class SQLManager extends SQLiteOpenHelper {
         CategoryObject object2 = new CategoryObject("Vervoer",R.drawable.car,null);
         CategoryObject object3 = new CategoryObject("Huur",R.drawable.home,null);
 
-        CategoryObject[] array = {object1, object2, object3};
+        return list;
 
-        return array;
     }
 
     @Override

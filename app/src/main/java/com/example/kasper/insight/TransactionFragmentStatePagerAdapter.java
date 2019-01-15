@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAdapter {
 
-    TransactionObject[] transactions;
+    ArrayList<TransactionObject> transactions;
     SQLManager sqlManager;
     Context context;
 
@@ -31,7 +33,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
 
     @Override
     public int getCount() {
-        return transactions.length;
+        return transactions.size();
     }
 
     @Override
@@ -40,7 +42,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
         TransactionListFragment fragment = new TransactionListFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable("transaction",transactions[position]);
+        args.putSerializable("transaction",transactions.get(position));
 
         // the android api discourages passing data through constructors in fragmens
         // so we pass the Transaction object trough a bundle

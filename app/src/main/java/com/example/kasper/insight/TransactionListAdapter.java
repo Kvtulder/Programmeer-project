@@ -9,9 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class TransactionListAdapter extends BaseAdapter {
 
-    private TransactionObject[] transactions;
+    private ArrayList<TransactionObject> transactions;
     private Context context;
 
     public TransactionListAdapter(Context context) {
@@ -28,7 +30,7 @@ public class TransactionListAdapter extends BaseAdapter {
     @Override
     public int getCount() {
 
-        return transactions.length;
+        return transactions.size();
     }
 
     @Override
@@ -36,7 +38,7 @@ public class TransactionListAdapter extends BaseAdapter {
 
         //TODO Does android handle integers greater than getCount?
 
-        return transactions[position];
+        return transactions.get(position);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class TransactionListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.transaction_list_item, parent, false);
         }
 
-        TransactionObject transaction = transactions[position];
+        TransactionObject transaction = transactions.get(position);
         TextView name =  convertView.findViewById(R.id.transactionName);
         name.setText(transaction.getName());
 
