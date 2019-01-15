@@ -20,3 +20,16 @@ Implemented some adapters as described in the design document. No new decisions 
 
 Tried to implement MPAndroidChart. It is pretty easy to work with, so i decided to use this library.
 Stuggled a bit with implementing the stateviewpageradaptor, but it works now
+
+## day 5
+
+Thought about how to implement some functionality of my app: how to categorise incoming money. I've decided to make two options: general income and category income. Category income can be usefull when you pay for all your friends in a restaurant and they pay you back later. If you could only could choose general income, the app would show you've spent a lot of money on restaurants, while you have spent a lot less in reality.
+
+## day 6
+
+Did some research in how to select the CSV file. It would be easy if you can integrate it with google drive, so you can download the file on your computer, and immediately open it in the app. The android action_get_content seems to support this.
+
+## day 7
+
+Implented the csv selector dialog. It works perfect, no need to change it.
+
