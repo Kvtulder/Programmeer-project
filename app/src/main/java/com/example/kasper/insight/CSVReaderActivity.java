@@ -1,5 +1,6 @@
 package com.example.kasper.insight;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,11 +11,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+
 public class CSVReaderActivity extends AppCompatActivity {
 
 
     // create an ID for the anroid file dialog
     int CSVREADREQUESTCODE = 1;
+
+    // store reference to var so we can also can Activity functions from inner classes
+    Activity activity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +42,23 @@ public class CSVReaderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Toast.makeText(CSVReaderActivity.this, data.getData().getPath(), Toast.LENGTH_LONG).show();
+        try {
+            FileDescriptor fd = getContentResolver()
+                    .openFileDescriptor(data.getData(), "r").getFileDescriptor();
+            CSVReader csvReader = new CSVReader(fd, this);
+            csvReader.storeTransactions();
+
+            activity.finish();
+
+
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Can't find selected file!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

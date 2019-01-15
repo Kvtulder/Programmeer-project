@@ -1,9 +1,12 @@
 package com.example.kasper.insight;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import java.util.ArrayList;
 import androidx.annotation.Nullable;
 
@@ -25,7 +28,7 @@ public class SQLManager extends SQLiteOpenHelper {
     // make class a singleton
     public static SQLManager getInstance(Context context){
         if(instance == null){
-            instance = new SQLManager(context, DATABASENAME, null, 5);
+            instance = new SQLManager(context, DATABASENAME, null, 6);
         }
 
         return instance;
@@ -46,6 +49,23 @@ public class SQLManager extends SQLiteOpenHelper {
 
         return cursorToCategoryList(cursor);
 
+    }
+
+    public void insertTransaction(TransactionObject object){
+
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues transactionData = new ContentValues();
+
+        transactionData.put("name", object.getName());
+        transactionData.put("amount", object.getAmount());
+        transactionData.put("description",object.getDescription());
+        transactionData.put("IBAN",object.getIBAN());
+        //TODO put category
+
+        Long asd;
+        asd = database.insert(TABLENAME_TRANSACTIONS, null, transactionData);
+
+        Log.i("Insight", "Transaction inserted, id " + asd.toString());
     }
 
     // Transforms the cursor from the database into an arraylist with transactions
@@ -93,12 +113,6 @@ public class SQLManager extends SQLiteOpenHelper {
             //remove from memory
             cursor.close();
         }
-
-        // Create some fake categories for testing purposes
-
-        CategoryObject object1 = new CategoryObject("Boodschappen",R.drawable.cutlery,null);
-        CategoryObject object2 = new CategoryObject("Vervoer",R.drawable.car,null);
-        CategoryObject object3 = new CategoryObject("Huur",R.drawable.home,null);
 
         return list;
 
