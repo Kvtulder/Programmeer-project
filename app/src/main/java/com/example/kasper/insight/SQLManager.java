@@ -28,7 +28,7 @@ public class SQLManager extends SQLiteOpenHelper {
     // make class a singleton
     public static SQLManager getInstance(Context context){
         if(instance == null){
-            instance = new SQLManager(context, DATABASENAME, null, 6);
+            instance = new SQLManager(context, DATABASENAME, null, 7);
         }
 
         return instance;
@@ -62,10 +62,8 @@ public class SQLManager extends SQLiteOpenHelper {
         transactionData.put("IBAN",object.getIBAN());
         //TODO put category
 
-        Long asd;
-        asd = database.insert(TABLENAME_TRANSACTIONS, null, transactionData);
+        database.insert(TABLENAME_TRANSACTIONS, null, transactionData);
 
-        Log.i("Insight", "Transaction inserted, id " + asd.toString());
     }
 
     // Transforms the cursor from the database into an arraylist with transactions
@@ -104,8 +102,8 @@ public class SQLManager extends SQLiteOpenHelper {
             do {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 int drawable = cursor.getInt(cursor.getColumnIndex("drawable"));
-
-                CategoryObject category = new CategoryObject(name, drawable);
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                CategoryObject category = new CategoryObject(id, name, drawable);
                 list.add(category);
             }
             while (cursor.moveToNext());
@@ -146,17 +144,19 @@ public class SQLManager extends SQLiteOpenHelper {
 
         db.execSQL(test);
 
+        // insert test value
+        test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
+                "('Huur', " + R.drawable.home + ");";
+
+        db.execSQL(test);
 
         // insert test value
-        test = "INSERT INTO " + TABLENAME_TRANSACTIONS + " (name, description, amount, IBAN) VALUES " +
-                "('HEMA!', 'Volgnummer 0004344 Pasnummer 34545', -7.48, 'NL03 IGNB 0003 2577 45');";
+        test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
+                "('Auto', " + R.drawable.car + ");";
 
         db.execSQL(test);
 
-        test = "INSERT INTO " + TABLENAME_TRANSACTIONS + " (name, description, amount, IBAN) VALUES " +
-                "('GAMMA!', 'Volgnummer 0004344 Pasnummer 34545', -3.48, 'NL03 IGNB 0003 2577 45');";
 
-        db.execSQL(test);
 
     }
 

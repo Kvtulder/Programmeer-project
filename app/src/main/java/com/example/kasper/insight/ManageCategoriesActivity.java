@@ -15,7 +15,7 @@ public class ManageCategoriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_categories);
 
-        final CategoryGridAdapter adapter = new CategoryGridAdapter(this);
+        final CategoryAdapter adapter = new CategoryAdapter(this, R.layout.category_grid_item);
         final Context context = this;
 
 

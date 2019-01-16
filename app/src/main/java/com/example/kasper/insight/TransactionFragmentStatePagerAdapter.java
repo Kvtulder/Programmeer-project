@@ -2,6 +2,9 @@ package com.example.kasper.insight;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +14,8 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -80,6 +85,30 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             name.setText(transaction.getName());
             description.setText(transaction.getDescription());
             amount.setText(String.format("%.2f,-", transaction.getAmount()));
+
+            Spinner spinner = view.findViewById(R.id.spinner);
+            CategoryAdapter adapter = new CategoryAdapter(getContext(), R.layout.category_spinner_item);
+
+
+            // creare a extra option in the spinner that functions as no category
+            CategoryObject defaultItem = new CategoryObject("Selecteer een categorie", android.R.color.transparent);
+            adapter.addPosition(defaultItem, 0);
+
+            // check if there is already a default category
+            if (transaction.getCategory() != null){
+                int position = adapter.getPosition(transaction.getCategory());
+                spinner.setSelection(position);
+            }
+
+            spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
+
+            spinner.setAdapter(adapter);
+
             return view;
         }
     }

@@ -11,19 +11,29 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class CategoryGridAdapter extends BaseAdapter {
+public class CategoryAdapter extends BaseAdapter {
 
     private SQLManager sqlManager;
     private ArrayList<CategoryObject> categories;
+    private int layoutFile;
 
     Context context;
 
-    public CategoryGridAdapter(Context context) {
+    public CategoryAdapter(Context context, int layoutFile) {
 
         this.context = context;
+        this.layoutFile = layoutFile;
 
         sqlManager = SQLManager.getInstance(context);
         categories = sqlManager.getCategories();
+    }
+
+    public void addPosition(CategoryObject object, int position){
+        categories.add(position, object);
+    }
+
+    public int getPosition(CategoryObject object){
+        return categories.indexOf(object);
     }
 
     @Override
@@ -48,7 +58,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.category_grid_item, parent, false);
+            convertView = inflater.inflate(layoutFile, parent, false);
         }
 
         ImageView imageView = convertView.findViewById(R.id.categoryLogo);
