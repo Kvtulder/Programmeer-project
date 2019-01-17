@@ -25,16 +25,16 @@ public class TransactionObject implements Serializable {
         this.amount = amount;
     }
 
-    public TransactionObject(String IBAN, String name, String description, double amount) {
+    public TransactionObject(int ID, String IBAN, String name, String description, double amount) {
+        this.ID = ID;
         this.IBAN = IBAN;
         this.name = name;
         this.description = description;
         this.amount = amount;
     }
 
-    public TransactionObject(int ID, Date date, String IBAN, String name, String description, double amount, CategoryObject category) {
+    public TransactionObject(int ID, String IBAN, String name, String description, double amount, CategoryObject category) {
         this.ID = ID;
-        this.date = date
         this.IBAN = IBAN;
         this.name = name;
         this.description = description;
@@ -56,6 +56,14 @@ public class TransactionObject implements Serializable {
 
     public double getAmount() {
         return amount;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     public CategoryObject getCategory() { return category; }

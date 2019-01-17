@@ -41,4 +41,8 @@ public class CategoryObject implements Serializable {
     public int[] getLinkedTransactionAccountIDS() {
         return linkedTransactionAccountIDS;
     }
+
+    public int getId() {
+        return id;
+    }
 }

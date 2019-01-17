@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -87,7 +89,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             amount.setText(String.format("%.2f,-", transaction.getAmount()));
 
             Spinner spinner = view.findViewById(R.id.spinner);
-            CategoryAdapter adapter = new CategoryAdapter(getContext(), R.layout.category_spinner_item);
+            final CategoryAdapter adapter = new CategoryAdapter(getContext(), R.layout.category_spinner_item);
 
 
             // creare a extra option in the spinner that functions as no category
@@ -100,9 +102,24 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
                 spinner.setSelection(position);
             }
 
-            spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    if (position != 0) {
+                        SQLManager sqlManager = SQLManager.getInstance(getContext());
+                        CategoryObject category = (CategoryObject) adapter.getItem(position);
+                        Boolean bool = sqlManager.setTransactionCategory(transaction, category.getId());
+
+                        if(!bool)
+                            Toast.makeText(getContext(), "FALSE!", Toast.LENGTH_LONG).show();
+                    }
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
                 }
             });

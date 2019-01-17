@@ -12,30 +12,73 @@ import androidx.annotation.Nullable;
 
 public class SQLManager extends SQLiteOpenHelper {
 
-
     private static SQLManager instance;
+    private SQLiteDatabase database;
 
 
-    private static String DATABASENAME = "InsightDB";
-    private static String TABLENAME_TRANSACTIONS = "transactions";
-    private static String TABLENAME_CATEGORIES = "categories";
+    private static final String DATABASENAME = "InsightDB";
+    private static final String TABLENAME_TRANSACTIONS = "transactions";
+    private static final String TABLENAME_CATEGORIES = "categories";
 
     private SQLManager(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-    }
 
+        // init database
+        database = getWritableDatabase();
+    }
 
     // make class a singleton
     public static SQLManager getInstance(Context context){
-        if(instance == null){
+
+        if(instance == null)
             instance = new SQLManager(context, DATABASENAME, null, 7);
-        }
 
         return instance;
     }
 
+    public Boolean setTransactionCategory(TransactionObject transaction, int categoryID){
+
+        // check if given transaction has an category
+        if (transaction.getID() == 0)
+            return false;
+
+        // prepare values
+        ContentValues values = new ContentValues();
+        values.put("categoryID", categoryID);
+
+        Log.d("Insight", "putting category: t id " + transaction.getID() + "; c id " + categoryID);
+
+        String[] whereArgs = {String.format("%d", transaction.getID())};
+        int rowsAffected = database.update(TABLENAME_TRANSACTIONS,values,"_id = ?", whereArgs);
+
+
+        // check if sql query was a succes
+        return rowsAffected == 1;
+    }
+
+    public CategoryObject getCategoryByID(int ID)
+    {
+        String[] args = {String.format("%d",ID)};
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES + " WHERE _id = ?", args);
+
+        Log.d("Insight",  cursor.getCount() + " ; " + ID);
+
+
+
+        ArrayList<CategoryObject> list = cursorToCategoryList(cursor);
+        if (list.size() == 1){
+            return list.get(0);
+        }
+        else{
+            Log.d("Insight", "Warning: getCategory object returned zero results!" + list.size());
+            return null;
+        }
+
+    }
+
     public ArrayList<TransactionObject> getTransactions(){
-        SQLiteDatabase database = getWritableDatabase();
+
+        // perform database query
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS,null);
 
         // transform database results to usable data and return the result
@@ -44,16 +87,17 @@ public class SQLManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<CategoryObject> getCategories(){
-        SQLiteDatabase database = getWritableDatabase();
+
+        // perform database query
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES,null);
 
+        // transform database results to usable data and return the result
         return cursorToCategoryList(cursor);
 
     }
 
     public void insertTransaction(TransactionObject object){
 
-        SQLiteDatabase database = getWritableDatabase();
         ContentValues transactionData = new ContentValues();
 
         transactionData.put("name", object.getName());
@@ -74,13 +118,22 @@ public class SQLManager extends SQLiteOpenHelper {
 
             // loop as long as there still are rows left
             do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 String description = cursor
                         .getString(cursor.getColumnIndex("description"));
                 String IBAN = cursor.getString(cursor.getColumnIndex("IBAN"));
                 double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
+                int categoryID = cursor.getInt(cursor.getColumnIndex("categoryID"));
 
-                TransactionObject transaction = new TransactionObject(IBAN, name, description, amount);
+                //TODO date conversion
+
+                CategoryObject category = getCategoryByID(categoryID);
+
+                if(category!=null)
+                    Log.d("Insight",category.getName());
+
+                TransactionObject transaction = new TransactionObject(id, IBAN, name, description, amount, category);
                 list.add(transaction);
             }
             while (cursor.moveToNext());
