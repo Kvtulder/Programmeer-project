@@ -20,11 +20,10 @@ public class TransactionOverViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_over_view);
-
         final Context context = this;
 
         SQLManager sqlManager = SQLManager.getInstance(this);
-        ArrayList<TransactionObject> transactions = sqlManager.getTransactions();
+        final ArrayList<TransactionObject> transactions = sqlManager.getTransactions();
 
         listAdapter = new TransactionListAdapter(this, transactions);
         ListView listView = (ListView) findViewById(R.id.listview);
@@ -33,6 +32,17 @@ public class TransactionOverViewActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO DO something
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(context, TransactionViewActivity.class);
+
+                TransactionObject transaction = (TransactionObject) listAdapter.getItem(position);
+                intent.putExtra("transaction", transaction);
+                startActivity(intent);
             }
         });
 

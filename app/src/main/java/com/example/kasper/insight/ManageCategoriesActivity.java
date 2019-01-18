@@ -24,7 +24,7 @@ public class ManageCategoriesActivity extends AppCompatActivity {
 
         final CategoryObject newCategoryItem = new CategoryObject("Nieuwe categorie",R.drawable.barchart);
         adapter.addPosition(newCategoryItem);
-        final int newCategoryItemPosition = adapter.getPosition(newCategoryItem);
+        final int newCategoryItemPosition = adapter.getPosition(newCategoryItem.getName());
 
         // let the user view categories by clicking on them
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -38,13 +38,19 @@ public class ManageCategoriesActivity extends AppCompatActivity {
                 }
                 else
                 {
+
+
+
                     CategoryObject category = (CategoryObject) adapter.getItem(position);
                     intent = new Intent(context, CategoryViewActivity.class);
                     intent.putExtra("category", category);
                 }
 
-                // start it!
                 startActivity(intent);
+
+
+                // start it!
+
 
             }
         });

@@ -96,7 +96,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
 
             // check if there is already a default category
             if (transaction.getCategory() != null){
-                int position = adapter.getPosition(transaction.getCategory());
+                int position = adapter.getPosition(transaction.getCategory().getName());
                 spinner.setSelection(position);
             }
 

@@ -36,8 +36,13 @@ public class CategoryAdapter extends BaseAdapter {
         categories.add(object);
     }
 
-    public int getPosition(CategoryObject object){
-        return categories.indexOf(object);
+    public int getPosition(String categoryName){
+
+        for(CategoryObject category : categories){
+            if (category.getName().equals(categoryName))
+                return categories.indexOf(category);
+        }
+        return -1;
     }
 
     @Override

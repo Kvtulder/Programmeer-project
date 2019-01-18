@@ -1,8 +1,12 @@
 package com.example.kasper.insight;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +20,7 @@ public class CategoryViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_view);
         Bundle arguments = getIntent().getExtras();
+        final Context context = this;
 
         // get transaction from bundle
         if(arguments != null)
@@ -34,7 +39,21 @@ public class CategoryViewActivity extends AppCompatActivity {
             SQLManager sqlManager = SQLManager.getInstance(this);
             ArrayList<TransactionObject> transactions =
                     sqlManager.getTransactionsWithtCategoryID(category.getId());
-            listView.setAdapter(new TransactionListAdapter(this,transactions));
+            final TransactionListAdapter adapter = new TransactionListAdapter(this,transactions);
+
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(context, TransactionViewActivity.class);
+
+                    TransactionObject transaction = (TransactionObject) adapter.getItem(position);
+                    intent.putExtra("transaction", transaction);
+                    startActivity(intent);
+                }
+            });
+
 
 
         }
