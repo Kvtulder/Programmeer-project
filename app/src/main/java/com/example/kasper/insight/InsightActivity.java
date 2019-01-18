@@ -1,17 +1,22 @@
 package com.example.kasper.insight;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -24,20 +29,39 @@ public class InsightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insight);
 
-        PieChart pieChart = findViewById(R.id.piechart);
+        final Context context = this;
 
-        ArrayList<PieEntry> entries = new ArrayList();
+        final PieChart pieChart = findViewById(R.id.piechart);
 
-        entries.add(new PieEntry(400f, 0));
-        entries.add(new PieEntry(30f, 1));
-        entries.add(new PieEntry(300f, 2));
-        PieDataSet dataSet = new PieDataSet(entries,"Label!");
+       StatisticsHelper helper = new StatisticsHelper();
+       final SQLManager sqlManager = SQLManager.getInstance(this);
+       ArrayList<TransactionObject> transactions = sqlManager.getTransactions();
 
+       PieDataSet dataSet = helper.getPieData(transactions, "Test");
         PieData data = new PieData(dataSet);
         pieChart.setData(data);
         pieChart.animateXY(1000, 100);
 
         dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+
+
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+
+                final PieEntry pieEntry = (PieEntry) e;
+                CategoryObject category = sqlManager.getCategoryByName(pieEntry.getLabel());
+                Intent intent = new Intent(context, CategoryViewActivity.class);
+                intent.putExtra("category", category);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
     }
 

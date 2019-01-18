@@ -4,7 +4,10 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class CategoryViewActivity extends AppCompatActivity {
 
@@ -26,6 +29,12 @@ public class CategoryViewActivity extends AppCompatActivity {
             Drawable drawable = getResources().getDrawable(category.getDrawableID());
             name.setText(category.getName());
             logo.setImageDrawable(drawable);
+
+            ListView listView = findViewById(R.id.listView);
+            SQLManager sqlManager = SQLManager.getInstance(this);
+            ArrayList<TransactionObject> transactions =
+                    sqlManager.getTransactionsWithtCategoryID(category.getId());
+            listView.setAdapter(new TransactionListAdapter(this,transactions));
 
 
         }

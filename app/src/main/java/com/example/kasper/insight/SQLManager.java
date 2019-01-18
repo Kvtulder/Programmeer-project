@@ -31,7 +31,7 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 7);
+            instance = new SQLManager(context, DATABASENAME, null, 10);
 
         return instance;
     }
@@ -51,6 +51,7 @@ public class SQLManager extends SQLiteOpenHelper {
         String[] whereArgs = {String.format("%d", transaction.getID())};
         int rowsAffected = database.update(TABLENAME_TRANSACTIONS,values,"_id = ?", whereArgs);
 
+        Log.d("Insight", "rows affectes " + rowsAffected);
 
         // check if sql query was a succes
         return rowsAffected == 1;
@@ -93,6 +94,43 @@ public class SQLManager extends SQLiteOpenHelper {
 
         // transform database results to usable data and return the result
         return cursorToCategoryList(cursor);
+
+    }
+
+    public ArrayList<TransactionObject> getTransactionsWithoutCategory(){
+
+        Cursor cursor = database
+                .rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS
+                        + " WHERE categoryID IS NULL", null);
+
+        return cursorToTransactionList(cursor);
+
+    }
+
+    public CategoryObject getCategoryByName(String name){
+        String[] whereArgs = {name};
+
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES
+                + " WHERE name = ?", whereArgs);
+
+        ArrayList<CategoryObject> list = cursorToCategoryList(cursor);
+
+        if (list.size()!=1)
+            return null;
+        else
+            return list.get(0);
+    }
+
+
+    public ArrayList<TransactionObject> getTransactionsWithtCategoryID(int ID){
+
+        String[] whereArgs = {String.format("%d",ID)};
+
+        Cursor cursor = database
+                .rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS
+                        + " WHERE categoryID IS ?", whereArgs);
+
+        return cursorToTransactionList(cursor);
 
     }
 

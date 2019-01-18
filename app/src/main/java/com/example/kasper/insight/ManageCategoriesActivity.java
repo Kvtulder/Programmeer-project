@@ -22,14 +22,27 @@ public class ManageCategoriesActivity extends AppCompatActivity {
         GridView gridView = findViewById(R.id.gridview);
         gridView.setAdapter(adapter);
 
+        final CategoryObject newCategoryItem = new CategoryObject("Nieuwe categorie",R.drawable.barchart);
+        adapter.addPosition(newCategoryItem);
+        final int newCategoryItemPosition = adapter.getPosition(newCategoryItem);
+
         // let the user view categories by clicking on them
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent;
 
-                CategoryObject category = (CategoryObject) adapter.getItem(position);
-                Intent intent = new Intent(context, CategoryViewActivity.class);
-                intent.putExtra("category", category);
+                // check if the user clicked on new category item
+                if(position == newCategoryItemPosition){
+                    intent = new Intent(context, NewCategoryActivity.class);
+                }
+                else
+                {
+                    CategoryObject category = (CategoryObject) adapter.getItem(position);
+                    intent = new Intent(context, CategoryViewActivity.class);
+                    intent.putExtra("category", category);
+                }
+
                 // start it!
                 startActivity(intent);
 

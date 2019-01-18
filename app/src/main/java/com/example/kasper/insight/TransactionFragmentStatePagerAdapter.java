@@ -33,9 +33,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
 
         super(fm);
         sqlManager = SQLManager.getInstance(context);
-        transactions = sqlManager.getTransactions();
-
-
+        transactions = sqlManager.getTransactionsWithoutCategory();
     }
 
     @Override

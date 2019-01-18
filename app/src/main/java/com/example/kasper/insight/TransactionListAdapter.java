@@ -16,14 +16,11 @@ public class TransactionListAdapter extends BaseAdapter {
     private ArrayList<TransactionObject> transactions;
     private Context context;
 
-    public TransactionListAdapter(Context context) {
+    public TransactionListAdapter(Context context, ArrayList<TransactionObject> transactions) {
 
         // set the context variable
         this.context = context;
-
-        // get the transactions from the local database
-        SQLManager sqlManager = SQLManager.getInstance(context);
-        transactions = sqlManager.getTransactions();
+        this.transactions = transactions;
 
     }
 
@@ -71,6 +68,10 @@ public class TransactionListAdapter extends BaseAdapter {
             ImageView imageView = convertView.findViewById(R.id.imageView);
             Drawable drawable = convertView.getResources().getDrawable(category.getDrawableID());
             imageView.setImageDrawable(drawable);
+        }
+        else{
+            ImageView imageView = convertView.findViewById(R.id.imageView);
+            imageView.setImageResource(android.R.color.transparent);
         }
 
 

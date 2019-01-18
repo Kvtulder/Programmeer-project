@@ -31,6 +31,11 @@ public class CategoryAdapter extends BaseAdapter {
         categories.add(position, object);
     }
 
+    // overide method for when the object can be inserted at the end
+    public void addPosition(CategoryObject object){
+        categories.add(object);
+    }
+
     public int getPosition(CategoryObject object){
         return categories.indexOf(object);
     }

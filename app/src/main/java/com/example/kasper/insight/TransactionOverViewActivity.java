@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class TransactionOverViewActivity extends AppCompatActivity {
 
     private TransactionListAdapter listAdapter;
@@ -21,7 +23,10 @@ public class TransactionOverViewActivity extends AppCompatActivity {
 
         final Context context = this;
 
-        listAdapter = new TransactionListAdapter(this);
+        SQLManager sqlManager = SQLManager.getInstance(this);
+        ArrayList<TransactionObject> transactions = sqlManager.getTransactions();
+
+        listAdapter = new TransactionListAdapter(this, transactions);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

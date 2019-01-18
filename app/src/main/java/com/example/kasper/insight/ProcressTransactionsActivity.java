@@ -29,8 +29,8 @@ public class ProcressTransactionsActivity extends AppCompatActivity {
         // Show a snackbar with the hint to import new transactions if there aren't any
         if (adapter.getCount() == 0){
             Snackbar snackbar = Snackbar
-                    .make(viewPager, "Nothing here yet!", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction("IMPORT", new View.OnClickListener() {
+                    .make(viewPager, "Je hebt alles al verwerkt!", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("IMPORT NEW", new View.OnClickListener() {
 
                 // start CSV reader activity
                 @Override
