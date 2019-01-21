@@ -118,7 +118,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
+                    // do nothing `
                 }
             });
 

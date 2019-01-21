@@ -6,8 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import java.util.ArrayList;
+import java.util.Date;
+
 import androidx.annotation.Nullable;
 
 public class SQLManager extends SQLiteOpenHelper {
@@ -31,9 +32,25 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 10);
+            instance = new SQLManager(context, DATABASENAME, null, 12);
 
         return instance;
+    }
+
+
+    // returns the date of the oldest transaction
+    public Long getOldestTransaction(){
+
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS +
+                " ORDER BY date ASC LIMIT 1", null);
+
+        if (cursor.getCount() != 1)
+            return null;
+        else {
+            cursor.moveToFirst();
+            return cursor.getLong(cursor.getColumnIndex("date"));
+        }
+
     }
 
     public Boolean setTransactionCategory(TransactionObject transaction, int categoryID){
@@ -139,6 +156,13 @@ public class SQLManager extends SQLiteOpenHelper {
         ContentValues transactionData = new ContentValues();
 
         transactionData.put("name", object.getName());
+
+        Long millisecs = object.getDate().getTime();
+
+        // sqlite doesn't work with boolean type, so we use integers instead
+
+        transactionData.put("negative", object.getNegative() ? 1 : 0);
+        transactionData.put("date", millisecs);
         transactionData.put("amount", object.getAmount());
         transactionData.put("description",object.getDescription());
         transactionData.put("IBAN",object.getIBAN());
@@ -160,20 +184,26 @@ public class SQLManager extends SQLiteOpenHelper {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 String description = cursor
                         .getString(cursor.getColumnIndex("description"));
+
                 String IBAN = cursor.getString(cursor.getColumnIndex("IBAN"));
                 double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
                 int categoryID = cursor.getInt(cursor.getColumnIndex("categoryID"));
 
-                //TODO date conversion
+                Long millisecs = cursor.getLong(cursor.getColumnIndex("date"));
+                Date date = new Date(millisecs);
+
+                boolean negative = cursor.getInt(cursor.getColumnIndex("negative")) == 1;
 
                 CategoryObject category = getCategoryByID(categoryID);
 
                 if(category!=null)
                     Log.d("Insight",category.getName());
 
-                TransactionObject transaction = new TransactionObject(id, IBAN, name, description, amount, category);
+                TransactionObject transaction = new TransactionObject(id, date, IBAN, name, description,
+                        amount, negative, category);
                 list.add(transaction);
             }
+
             while (cursor.moveToNext());
 
             // remove from memory
@@ -213,10 +243,12 @@ public class SQLManager extends SQLiteOpenHelper {
         // create transactions table
         String query = "CREATE TABLE " + TABLENAME_TRANSACTIONS + "(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "date INT NOT NULL," +
                 "name TEXT NOT NULL," +
                 "description TEXT," +
                 "amount DOUBLE NOT NULL," +
                 "IBAN TEXT NOT NULL," +
+                "negative INT NOT NULL," +
                 "categoryID INT );";
 
         db.execSQL(query);

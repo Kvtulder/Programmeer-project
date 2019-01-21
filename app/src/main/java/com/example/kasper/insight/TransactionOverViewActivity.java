@@ -28,12 +28,6 @@ public class TransactionOverViewActivity extends AppCompatActivity {
         listAdapter = new TransactionListAdapter(this, transactions);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO DO something
-            }
-        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

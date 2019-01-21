@@ -61,15 +61,10 @@ public class CSVReader {
                     Log.i("Insight", "AMOUNT " + amountString);
                     Double amount = Double.parseDouble(amountString);
 
-                    //
-
-                    // make amount negative if money is withdrawn
-                    if(args[5] == "Af")
-                        amount *= -1;
-
+                    boolean negative = args[5].equals("Af");
                     String description = args[8];
 
-                    TransactionObject object = new TransactionObject(date, IBAN, name, description, amount);
+                    TransactionObject object = new TransactionObject(date, IBAN, name, description, amount, negative);
                     sqlManager.insertTransaction(object);
                 }
 

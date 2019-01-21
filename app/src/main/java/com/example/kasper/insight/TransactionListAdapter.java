@@ -1,6 +1,7 @@
 package com.example.kasper.insight;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,9 @@ public class TransactionListAdapter extends BaseAdapter {
 
         TextView amount = convertView.findViewById(R.id.transactionAmount);
         amount.setText(String.format("%.2f", transaction.getAmount()));
+
+        int color = transaction.getNegative() ? Color.RED : Color.GREEN;
+        amount.setTextColor(color);
 
 
         CategoryObject category = transaction.getCategory();

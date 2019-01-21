@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 public class TransactionViewActivity extends AppCompatActivity {
 
     @Override
@@ -27,6 +29,8 @@ public class TransactionViewActivity extends AppCompatActivity {
 
             TextView name = findViewById(R.id.transactionName);
             TextView description = findViewById(R.id.transactionDescription);
+            TextView date = findViewById(R.id.transactionDate);
+
             Spinner spinner = findViewById(R.id.spinner);
 
             CategoryAdapter adapter = new CategoryAdapter(this, R.layout.category_spinner_item);
@@ -47,6 +51,8 @@ public class TransactionViewActivity extends AppCompatActivity {
             // fill in all the textviews
             name.setText(transaction.getName());
             description.setText(transaction.getDescription());
+            String dateString = new SimpleDateFormat("dd-MM-yyyy").format(transaction.getDate());
+            date.setText(dateString);
 
 
 

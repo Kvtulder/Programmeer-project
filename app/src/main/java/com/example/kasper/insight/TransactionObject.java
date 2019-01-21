@@ -16,8 +16,14 @@ public class TransactionObject implements Serializable {
     private String description;
     private double amount;
     private CategoryObject category;
+    boolean negative;
 
-    public TransactionObject(Date date, String IBAN, String name, String description, double amount) {
+
+    // create constructor for new transactions that haven't been stored yet in the db
+    // they don't have an ID yet
+    public TransactionObject(Date date, String IBAN, String name, String description, double amount,
+                             Boolean negative) {
+        this.negative = negative;
         this.date = date;
         this.IBAN = IBAN;
         this.name = name;
@@ -25,15 +31,12 @@ public class TransactionObject implements Serializable {
         this.amount = amount;
     }
 
-    public TransactionObject(int ID, String IBAN, String name, String description, double amount) {
-        this.ID = ID;
-        this.IBAN = IBAN;
-        this.name = name;
-        this.description = description;
-        this.amount = amount;
-    }
+    // contructor for objects from the sql db
+    public TransactionObject(int ID, Date date, String IBAN, String name, String description, double amount,
+                             boolean negative, CategoryObject category) {
 
-    public TransactionObject(int ID, String IBAN, String name, String description, double amount, CategoryObject category) {
+        this.date = date;
+        this.negative = negative;
         this.ID = ID;
         this.IBAN = IBAN;
         this.name = name;
@@ -44,6 +47,10 @@ public class TransactionObject implements Serializable {
 
     public String getIBAN() {
         return IBAN;
+    }
+
+    public boolean getNegative() {
+        return negative;
     }
 
     public String getName() {
