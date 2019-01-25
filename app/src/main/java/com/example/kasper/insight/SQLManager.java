@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -32,7 +34,7 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 12);
+            instance = new SQLManager(context, DATABASENAME, null, 13);
 
         return instance;
     }
@@ -88,7 +90,6 @@ public class SQLManager extends SQLiteOpenHelper {
             return list.get(0);
         }
         else{
-            Log.d("Insight", "Warning: getCategory object returned zero results!" + list.size());
             return null;
         }
 
@@ -124,6 +125,26 @@ public class SQLManager extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<TransactionObject> getTransactionsByPeriod(PeriodObject period){
+
+        String selection = "date >= ? AND date <= ?";
+        String start = String.valueOf(period.getStart().getTime());
+        String end = String.valueOf(period.getEnd().getTime());
+        String[] selectionsArgs = {start, end};
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy");
+        Log.d("Insight", "Getting between " + simpleDateFormat.format(period.getStart())
+                + "and " + simpleDateFormat.format(period.getEnd()));
+
+        Cursor cursor = database.query(TABLENAME_TRANSACTIONS,null, selection, selectionsArgs,
+                null, null, null);
+
+        Log.d("Insight", "Getting between " + start + " and " + end);
+        Log.d("Insight", "Results: " + cursor.getCount());
+
+        return cursorToTransactionList(cursor);
+    }
+
     public CategoryObject getCategoryByName(String name){
         String[] whereArgs = {name};
 
@@ -139,7 +160,7 @@ public class SQLManager extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<TransactionObject> getTransactionsWithtCategoryID(int ID){
+    public ArrayList<TransactionObject> getTransactionsWithoutCategoryID(int ID){
 
         String[] whereArgs = {String.format("%d",ID)};
 
@@ -195,9 +216,6 @@ public class SQLManager extends SQLiteOpenHelper {
                 boolean negative = cursor.getInt(cursor.getColumnIndex("negative")) == 1;
 
                 CategoryObject category = getCategoryByID(categoryID);
-
-                if(category!=null)
-                    Log.d("Insight",category.getName());
 
                 TransactionObject transaction = new TransactionObject(id, date, IBAN, name, description,
                         amount, negative, category);

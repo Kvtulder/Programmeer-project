@@ -38,7 +38,7 @@ public class CategoryViewActivity extends AppCompatActivity {
             ListView listView = findViewById(R.id.listView);
             SQLManager sqlManager = SQLManager.getInstance(this);
             ArrayList<TransactionObject> transactions =
-                    sqlManager.getTransactionsWithtCategoryID(category.getId());
+                    sqlManager.getTransactionsWithoutCategoryID(category.getId());
             final TransactionListAdapter adapter = new TransactionListAdapter(this,transactions);
 
             listView.setAdapter(adapter);

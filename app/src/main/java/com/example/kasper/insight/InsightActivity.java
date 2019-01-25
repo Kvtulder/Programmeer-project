@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import java.util.ArrayList;
 
+// import all the piechart classes
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -19,33 +23,82 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.util.ArrayList;
-
 
 public class InsightActivity extends AppCompatActivity {
 
+
+    // init variables
+    private PieChart pieChart;
+    private Context context;
+    private SQLManager sqlManager;
+    private StatisticsHelper helper = new StatisticsHelper();
+
+    private ArrayList<TransactionObject> transactions;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insight);
 
-        final Context context = this;
+        // init sql manager
+        sqlManager = SQLManager.getInstance(this);
 
-        final PieChart pieChart = findViewById(R.id.piechart);
+        pieChart = findViewById(R.id.piechart);
+        context = this;
 
-       StatisticsHelper helper = new StatisticsHelper();
-       final SQLManager sqlManager = SQLManager.getInstance(this);
-       ArrayList<TransactionObject> transactions = sqlManager.getTransactions();
+        // set the adapters
+        final Spinner spinner = findViewById(R.id.spinner);
+        spinner.setAdapter(new DateSpinnerAdapter(this));
 
-       PieDataSet dataSet = helper.getPieData(transactions, "Test");
+        // renew the transaction list to the selected period
+        PeriodObject period = (PeriodObject) spinner.getSelectedItem();
+        onPeriodChanged(period);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                // update the UI
+                PeriodObject period = (PeriodObject) spinner.getSelectedItem();
+                onPeriodChanged(period);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+    }
+
+    public void onPeriodChanged(PeriodObject period){
+
+        transactions = sqlManager.getTransactionsByPeriod(period);
+
+        // renew the piechart
+        initPieChart();
+
+    }
+
+    // draw the pie chart
+    public void initPieChart(){
+
+        // create the dataset
+        PieDataSet dataSet = helper.getPieData(transactions, "Insight");
         PieData data = new PieData(dataSet);
         pieChart.setData(data);
-        pieChart.animateXY(1000, 100);
 
+        // set the visuals
+        pieChart.animateXY(1000, 100);
         dataSet.setColors(ColorTemplate.PASTEL_COLORS);
 
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+            // guide the user to the category activity when clicked on a piechart category
             @Override
             public void onValueSelected(Entry e, Highlight h) {
 
@@ -59,13 +112,14 @@ public class InsightActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected() {
-
+                // never gets called because we start a new activity when a value is selected
+                //
             }
         });
 
     }
 
-
+    // inflate our custom toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

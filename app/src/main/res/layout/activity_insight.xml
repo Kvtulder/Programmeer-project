@@ -15,15 +15,11 @@
         android:orientation="horizontal">
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
