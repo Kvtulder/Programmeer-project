@@ -16,7 +16,7 @@ public class TransactionObject implements Serializable {
     private String description;
     private double amount;
     private CategoryObject category;
-    boolean negative;
+    private boolean negative;
 
 
     // create constructor for new transactions that haven't been stored yet in the db
@@ -77,5 +77,9 @@ public class TransactionObject implements Serializable {
 
     public void setCategory(CategoryObject category) {
         this.category = category;
+    }
+
+    public boolean isNegative() {
+        return negative;
     }
 }

@@ -2,6 +2,7 @@ package com.example.kasper.insight;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 // import all the piechart classes
@@ -26,6 +31,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class InsightActivity extends AppCompatActivity {
 
+
+    int CSVREADREQUESTCODE = 1;
 
     // init variables
     private PieChart pieChart;
@@ -93,7 +100,7 @@ public class InsightActivity extends AppCompatActivity {
 
         // set the visuals
         pieChart.animateXY(1000, 100);
-        dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -136,8 +143,10 @@ public class InsightActivity extends AppCompatActivity {
         // loop over all the possibilities
         switch (item.getItemId()) {
             case R.id.action_download_transactions:
-                intent = new Intent(this, CSVReaderActivity.class);
-                startActivity(intent);
+                intent = new Intent().setType("text/csv")
+                        .setAction(Intent.ACTION_GET_CONTENT);
+
+                startActivityForResult(Intent.createChooser(intent, "Selecteer een CSV bestand"), CSVREADREQUESTCODE);
                 return true;
             case R.id.action_show_transactions:
                 intent = new Intent(this, TransactionOverViewActivity.class);
@@ -154,5 +163,27 @@ public class InsightActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // set listener for the file selector
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try {
+            if(data == null){
+                Toast.makeText(this,"Geen bestand gevonden", Toast.LENGTH_LONG).show();
+                return;
+            }
+            FileDescriptor fd = getContentResolver()
+                    .openFileDescriptor(data.getData(), "r").getFileDescriptor();
+
+            CSVReader csvReader = new CSVReader(fd, this);
+            csvReader.storeTransactions();
+
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Can't find selected file!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

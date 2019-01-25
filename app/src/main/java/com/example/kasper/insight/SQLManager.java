@@ -34,7 +34,8 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 13);
+            instance = new SQLManager(context, DATABASENAME, null, 16
+            );
 
         return instance;
     }
@@ -132,15 +133,8 @@ public class SQLManager extends SQLiteOpenHelper {
         String end = String.valueOf(period.getEnd().getTime());
         String[] selectionsArgs = {start, end};
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy");
-        Log.d("Insight", "Getting between " + simpleDateFormat.format(period.getStart())
-                + "and " + simpleDateFormat.format(period.getEnd()));
-
         Cursor cursor = database.query(TABLENAME_TRANSACTIONS,null, selection, selectionsArgs,
                 null, null, null);
-
-        Log.d("Insight", "Getting between " + start + " and " + end);
-        Log.d("Insight", "Results: " + cursor.getCount());
 
         return cursorToTransactionList(cursor);
     }
@@ -172,24 +166,47 @@ public class SQLManager extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<CategoryObject> getIncomeCategories(){
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES +
+                        " WHERE income = 1", null);
+        return cursorToCategoryList(cursor);
+    }
+
+    public ArrayList<CategoryObject> getSpendingCategories(){
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES +
+                " WHERE spending = 1", null);
+        return cursorToCategoryList(cursor);
+    }
+
     public void insertTransaction(TransactionObject object){
 
         ContentValues transactionData = new ContentValues();
-
-        transactionData.put("name", object.getName());
-
         Long millisecs = object.getDate().getTime();
 
-        // sqlite doesn't work with boolean type, so we use integers instead
 
+        transactionData.put("name", object.getName());
+        // sqlite doesn't work with boolean type, so we use integers instead
         transactionData.put("negative", object.getNegative() ? 1 : 0);
         transactionData.put("date", millisecs);
         transactionData.put("amount", object.getAmount());
         transactionData.put("description",object.getDescription());
         transactionData.put("IBAN",object.getIBAN());
-        //TODO put category
 
         database.insert(TABLENAME_TRANSACTIONS, null, transactionData);
+
+    }
+
+    public void insertCategory(CategoryObject object){
+
+        ContentValues categoryData = new ContentValues();
+        categoryData.put("name", object.getName());
+        categoryData.put("drawable", object.getIcon().toString());
+        int income = object.isIncome() ? 0 : 1;
+        int spending = object.isSpending() ? 0 : 1;
+        categoryData.put("income", income);
+        categoryData.put("spending", spending);
+
+        database.insert(TABLENAME_CATEGORIES, null, categoryData);
 
     }
 
@@ -240,9 +257,22 @@ public class SQLManager extends SQLiteOpenHelper {
             // loop as long as there still are rows left
             do {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
-                int drawable = cursor.getInt(cursor.getColumnIndex("drawable"));
+                String iconName = cursor.getString(cursor.getColumnIndex("drawable"));
+
+                // set default icon
+                Icon icon = Icon.TRANSAPARENT;
+
+                // change icon from default if any
+                if(iconName != null) {
+                    icon = Icon.valueOf(iconName);
+                }
+
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
-                CategoryObject category = new CategoryObject(id, name, drawable);
+
+                boolean income = cursor.getInt(cursor.getColumnIndex("income")) == 1;
+                boolean spending = cursor.getInt(cursor.getColumnIndex("spending")) == 1;
+
+                CategoryObject category = new CategoryObject(id, name, icon, income, spending);
                 list.add(category);
             }
             while (cursor.moveToNext());
@@ -275,25 +305,27 @@ public class SQLManager extends SQLiteOpenHelper {
         query = "CREATE TABLE " + TABLENAME_CATEGORIES + "(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "name TEXT NOT NULL," +
-                "drawable INT);";
+                "income INT," +
+                "spending INT," +
+                "drawable TEXT);";
 
         db.execSQL(query);
 
         // insert test value
         String test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
-                "('Boodschappen', " + R.drawable.cutlery + ");";
+                "('Boodschappen', '" + Icon.BOOK.toString() + "');";
 
         db.execSQL(test);
 
         // insert test value
         test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
-                "('Huur', " + R.drawable.home + ");";
+                "('Huur', '" + Icon.HOME.toString() + "');";
 
         db.execSQL(test);
 
         // insert test value
         test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
-                "('Auto', " + R.drawable.car + ");";
+                "('Auto', '" + Icon.CAR.toString() + "');";
 
         db.execSQL(test);
 

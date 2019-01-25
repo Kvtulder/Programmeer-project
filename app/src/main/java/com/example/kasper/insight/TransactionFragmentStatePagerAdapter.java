@@ -34,6 +34,8 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
         super(fm);
         sqlManager = SQLManager.getInstance(context);
         transactions = sqlManager.getTransactionsWithoutCategory();
+
+        this.context = context;
     }
 
     @Override
@@ -49,10 +51,9 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
         Bundle args = new Bundle();
         args.putSerializable("transaction",transactions.get(position));
 
-        // the android api discourages passing data through constructors in fragmens
-        // so we pass the Transaction object trough a bundle
+        // the android api discourages passing data through constructors in fragments
+        // so we pass the transaction object trough a bundle
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -65,11 +66,9 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             super.onCreate(savedInstanceState);
             Bundle arguments = getArguments();
 
-            // check if there are anu arguments
+            // check if there are any arguments
             if(arguments != null)
-            {
                 transaction =  (TransactionObject) arguments.getSerializable("transaction");
-            }
         }
 
         @Override
@@ -86,12 +85,22 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             description.setText(transaction.getDescription());
             amount.setText(String.format("%.2f,-", transaction.getAmount()));
 
-            Spinner spinner = view.findViewById(R.id.spinner);
-            final CategoryAdapter adapter = new CategoryAdapter(getContext(), R.layout.category_spinner_item);
+            ArrayList<CategoryObject> categories;
+
+            SQLManager sqlManager = SQLManager.getInstance(getContext());
+
+            if(transaction.isNegative())
+                categories = sqlManager.getIncomeCategories();
+            else
+                categories = sqlManager.getSpendingCategories();
+
+            final Spinner spinner = view.findViewById(R.id.spinner);
+            final CategoryAdapter adapter = new CategoryAdapter(getContext(), R.layout.category_spinner_item, categories);
 
 
             // creare a extra option in the spinner that functions as no category
-            CategoryObject defaultItem = new CategoryObject("Selecteer een categorie", android.R.color.transparent);
+            CategoryObject defaultItem = new CategoryObject("Selecteer een categorie",
+                    Icon.TRANSAPARENT, false, false);
             adapter.addPosition(defaultItem, 0);
 
             // check if there is already a default category
@@ -106,14 +115,10 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
 
                     if (position != 0) {
                         SQLManager sqlManager = SQLManager.getInstance(getContext());
-                        CategoryObject category = (CategoryObject) adapter.getItem(position);
-                        Boolean bool = sqlManager.setTransactionCategory(transaction, category.getId());
 
-                        if(!bool)
-                            Toast.makeText(getContext(), "FALSE!", Toast.LENGTH_LONG).show();
+                        CategoryObject category = (CategoryObject) spinner.getItemAtPosition(position);
+                        sqlManager.setTransactionCategory(transaction, category.getId());
                     }
-
-
                 }
 
                 @Override
@@ -127,7 +132,4 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             return view;
         }
     }
-
 }
-
-

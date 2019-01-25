@@ -18,13 +18,11 @@ public class CategoryAdapter extends BaseAdapter {
 
     Context context;
 
-    public CategoryAdapter(Context context, int layoutFile) {
+    public CategoryAdapter(Context context, int layoutFile, ArrayList<CategoryObject> categories) {
 
         this.context = context;
         this.layoutFile = layoutFile;
-
-        sqlManager = SQLManager.getInstance(context);
-        categories = sqlManager.getCategories();
+        this.categories = categories;
     }
 
     public void addPosition(CategoryObject object, int position){

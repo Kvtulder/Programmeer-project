@@ -28,6 +28,8 @@ public class CSVReader {
         SQLManager sqlManager = SQLManager.getInstance(context);
         ArrayList<TransactionObject> list = new ArrayList<>();
 
+        // TODO check if file is valid
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileDescriptor));
 

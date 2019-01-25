@@ -35,7 +35,7 @@ public class ProcressTransactionsActivity extends AppCompatActivity {
                 // start CSV reader activity
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, CSVReaderActivity.class);
+                    Intent intent = new Intent(context, InsightActivity.class);
                     startActivity(intent);
                 }
             });
