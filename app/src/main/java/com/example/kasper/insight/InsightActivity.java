@@ -101,7 +101,7 @@ public class InsightActivity extends AppCompatActivity {
         // set the visuals
         pieChart.animateXY(1000, 100);
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-
+        pieChart.setHoleRadius(45f);
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 

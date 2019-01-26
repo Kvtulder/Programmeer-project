@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +62,13 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
     public  static class TransactionListFragment extends Fragment{
 
         private TransactionObject transaction;
+        private View view;
+        private TextView name;
+        private TextView description;
+        private TextView amount;
+        private RadioButton ibanMatch;
+        private RadioButton ibanAmountMatch;
+        private RadioButton neverMatch;
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,11 +84,15 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-            View view = inflater.inflate(R.layout.transaction_fragment_state, container, false);
+            view = inflater.inflate(R.layout.transaction_fragment_state, container, false);
 
-            TextView name = view.findViewById(R.id.transactionName);
-            TextView description = view.findViewById(R.id.transactionDescription);
-            TextView amount = view.findViewById(R.id.transactionAmount);
+            name = view.findViewById(R.id.transactionName);
+            description = view.findViewById(R.id.transactionDescription);
+            amount = view.findViewById(R.id.transactionAmount);
+
+            ibanAmountMatch = view.findViewById(R.id.amountIbanMatch);
+            ibanMatch = view.findViewById(R.id.ibanMatch);
+            neverMatch = view.findViewById(R.id.neverMatch);
 
             name.setText(transaction.getName());
             description.setText(transaction.getDescription());
@@ -110,14 +123,28 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             }
 
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     if (position != 0) {
+
+                        neverMatch.setEnabled(true);
+                        ibanAmountMatch.setEnabled(true);
+                        ibanMatch.setEnabled(true);
+
                         SQLManager sqlManager = SQLManager.getInstance(getContext());
 
                         CategoryObject category = (CategoryObject) spinner.getItemAtPosition(position);
                         sqlManager.setTransactionCategory(transaction, category.getId());
+                    }
+
+                    else{
+
+                        neverMatch.setEnabled(false);
+                        ibanAmountMatch.setEnabled(false);
+                        ibanMatch.setEnabled(false);
+
                     }
                 }
 

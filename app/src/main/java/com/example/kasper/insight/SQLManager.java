@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -22,6 +20,7 @@ public class SQLManager extends SQLiteOpenHelper {
     private static final String DATABASENAME = "InsightDB";
     private static final String TABLENAME_TRANSACTIONS = "transactions";
     private static final String TABLENAME_CATEGORIES = "categories";
+    private static final String TABLENAME_LINKED_TRANSACTIONS = "linked_transactions";
 
     private SQLManager(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -34,9 +33,7 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 16
-            );
-
+            instance = new SQLManager(context, DATABASENAME, null, 16);
         return instance;
     }
 
@@ -82,48 +79,28 @@ public class SQLManager extends SQLiteOpenHelper {
         String[] args = {String.format("%d",ID)};
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES + " WHERE _id = ?", args);
 
-        Log.d("Insight",  cursor.getCount() + " ; " + ID);
-
-
-
         ArrayList<CategoryObject> list = cursorToCategoryList(cursor);
-        if (list.size() == 1){
+        if (list.size() == 1)
             return list.get(0);
-        }
-        else{
+        else
             return null;
-        }
-
     }
 
     public ArrayList<TransactionObject> getTransactions(){
-
-        // perform database query
         Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS,null);
-
-        // transform database results to usable data and return the result
         return cursorToTransactionList(cursor);
-
     }
 
-    public ArrayList<CategoryObject> getCategories(){
-
-        // perform database query
-        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES,null);
-
-        // transform database results to usable data and return the result
+    public ArrayList<CategoryObject> getCategories() {
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_CATEGORIES, null);
         return cursorToCategoryList(cursor);
-
     }
 
     public ArrayList<TransactionObject> getTransactionsWithoutCategory(){
-
         Cursor cursor = database
                 .rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS
                         + " WHERE categoryID IS NULL", null);
-
         return cursorToTransactionList(cursor);
-
     }
 
     public ArrayList<TransactionObject> getTransactionsByPeriod(PeriodObject period){
@@ -135,7 +112,6 @@ public class SQLManager extends SQLiteOpenHelper {
 
         Cursor cursor = database.query(TABLENAME_TRANSACTIONS,null, selection, selectionsArgs,
                 null, null, null);
-
         return cursorToTransactionList(cursor);
     }
 
@@ -147,7 +123,7 @@ public class SQLManager extends SQLiteOpenHelper {
 
         ArrayList<CategoryObject> list = cursorToCategoryList(cursor);
 
-        if (list.size()!=1)
+        if (list.size() != 1)
             return null;
         else
             return list.get(0);
@@ -157,11 +133,9 @@ public class SQLManager extends SQLiteOpenHelper {
     public ArrayList<TransactionObject> getTransactionsWithoutCategoryID(int ID){
 
         String[] whereArgs = {String.format("%d",ID)};
-
         Cursor cursor = database
                 .rawQuery("SELECT * FROM " + TABLENAME_TRANSACTIONS
                         + " WHERE categoryID IS ?", whereArgs);
-
         return cursorToTransactionList(cursor);
 
     }
@@ -183,7 +157,6 @@ public class SQLManager extends SQLiteOpenHelper {
         ContentValues transactionData = new ContentValues();
         Long millisecs = object.getDate().getTime();
 
-
         transactionData.put("name", object.getName());
         // sqlite doesn't work with boolean type, so we use integers instead
         transactionData.put("negative", object.getNegative() ? 1 : 0);
@@ -193,7 +166,6 @@ public class SQLManager extends SQLiteOpenHelper {
         transactionData.put("IBAN",object.getIBAN());
 
         database.insert(TABLENAME_TRANSACTIONS, null, transactionData);
-
     }
 
     public void insertCategory(CategoryObject object){
@@ -238,13 +210,9 @@ public class SQLManager extends SQLiteOpenHelper {
                         amount, negative, category);
                 list.add(transaction);
             }
-
             while (cursor.moveToNext());
-
-            // remove from memory
-            cursor.close();
+            cursor.close(); // remove from memory
         }
-
         return list;
     }
 
@@ -309,6 +277,13 @@ public class SQLManager extends SQLiteOpenHelper {
                 "spending INT," +
                 "drawable TEXT);";
 
+        // create linked transations table
+        query = "CREATE TABLE " + TABLENAME_LINKED_TRANSACTIONS + "(" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "iban TEXT NOT NULL," +
+                "amount DOUBLE," +
+                "category_id INT);";
+
         db.execSQL(query);
 
         // insert test value
@@ -328,16 +303,11 @@ public class SQLManager extends SQLiteOpenHelper {
                 "('Auto', '" + Icon.CAR.toString() + "');";
 
         db.execSQL(test);
-
-
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         //TODO Only for testing purposes: this deletes all user data!
-
         // delete database and create again
         db.execSQL("DROP TABLE IF EXISTS " + TABLENAME_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLENAME_CATEGORIES);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -39,4 +40,36 @@
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/radioDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Doe dit automatisch wanneer"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:id="@+id/neverMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nooit" />
+
+        <RadioButton
+            android:id="@+id/ibanMatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Als IBAN overeenkomt" />
+
+        <RadioButton
+            android:id="@+id/amountIbanMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Als IBAN en bedrag overeenkomt" />
+    </RadioGroup>
+
 </android.widget.LinearLayout>
