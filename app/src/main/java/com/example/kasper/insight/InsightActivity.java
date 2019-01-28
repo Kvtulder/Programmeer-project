@@ -179,7 +179,17 @@ public class InsightActivity extends AppCompatActivity {
                     .openFileDescriptor(data.getData(), "r").getFileDescriptor();
 
             CSVReader csvReader = new CSVReader(fd, this);
-            csvReader.storeTransactions();
+            csvReader.storeTransactions(new CSVReaderCallback() {
+                @Override
+                public void onInvalidFile() {
+                    Toast.makeText(context, "Invalid file!", Toast.LENGTH_LONG);
+                }
+
+                @Override
+                public void onParseException() {
+                    Toast.makeText(context, "Couldn't parse file!", Toast.LENGTH_LONG);
+                }
+            });
 
         } catch (FileNotFoundException e) {
             Toast.makeText(this, "Can't find selected file!", Toast.LENGTH_LONG).show();

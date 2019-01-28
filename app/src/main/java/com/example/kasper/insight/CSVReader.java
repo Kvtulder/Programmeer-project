@@ -22,8 +22,7 @@ public class CSVReader {
         this.fileDescriptor = fileDescriptor;
     }
 
-    public ArrayList<TransactionObject> storeTransactions() {
-
+    public ArrayList<TransactionObject> storeTransactions(CSVReaderCallback callback) {
 
         SQLManager sqlManager = SQLManager.getInstance(context);
         ArrayList<TransactionObject> list = new ArrayList<>();
@@ -75,12 +74,11 @@ public class CSVReader {
             //TODO handle errors by implementing a callback
 
         } catch (IOException e) {
-            e.printStackTrace();
-            return list;
+
+            callback.onInvalidFile();
         } catch (ParseException e) {
 
-            Log.e("Insight", e.toString());
-            e.printStackTrace();
+            callback.onParseException();
         }
 
         return list;

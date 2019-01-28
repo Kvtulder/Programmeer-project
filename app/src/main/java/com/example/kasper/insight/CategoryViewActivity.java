@@ -39,6 +39,14 @@ public class CategoryViewActivity extends AppCompatActivity {
             SQLManager sqlManager = SQLManager.getInstance(this);
             ArrayList<TransactionObject> transactions =
                     sqlManager.getTransactionsWithoutCategoryID(category.getId());
+
+            StatisticsHelper helper = new StatisticsHelper();
+            double total = helper.getTotal(transactions);
+
+            spendings.setText(String.format("Totaal: %d", total));
+
+
+
             final TransactionListAdapter adapter = new TransactionListAdapter(this,transactions);
 
             listView.setAdapter(adapter);

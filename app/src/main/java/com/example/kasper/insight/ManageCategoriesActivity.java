@@ -32,7 +32,9 @@ public class ManageCategoriesActivity extends AppCompatActivity {
         final CategoryObject newCategoryItem = new CategoryObject("Nieuwe categorie",
                 Icon.BOOK, false, false);
         adapter.addPosition(newCategoryItem);
-        final int newCategoryItemPosition = gridView.getLastVisiblePosition();
+
+        // we've added the new item at the end of the grid, so the id equals the total amount - 1
+        final int newCategoryItemPosition = adapter.getCount() - 1;
 
         // let the user view categories by clicking on them
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
