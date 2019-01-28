@@ -286,23 +286,8 @@ public class SQLManager extends SQLiteOpenHelper {
 
         db.execSQL(query);
 
-        // insert test value
-        String test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
-                "('Boodschappen', '" + Icon.BOOK.toString() + "');";
-
-        db.execSQL(test);
-
-        // insert test value
-        test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
-                "('Huur', '" + Icon.HOME.toString() + "');";
-
-        db.execSQL(test);
-
-        // insert test value
-        test = "INSERT INTO " + TABLENAME_CATEGORIES + " (name, drawable) VALUES " +
-                "('Auto', '" + Icon.CAR.toString() + "');";
-
-        db.execSQL(test);
+        // insert default data
+        insertDefaultCategories();
     }
 
     @Override
@@ -313,5 +298,19 @@ public class SQLManager extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLENAME_CATEGORIES);
         onCreate(db);
 
+    }
+
+    private void insertDefaultCategories(){
+        CategoryObject object1 =
+                new CategoryObject("Algemene inkomsten", Icon.MONEY,true, false);
+        CategoryObject object2 =
+                new CategoryObject("Boodschappen", Icon.CUTLERY, false, true);
+        CategoryObject object3 =
+                new CategoryObject("Huur", Icon.HOME, false, true);
+
+        CategoryObject[] objectArray = {object1, object2, object3};
+        for(CategoryObject iterator : objectArray){
+            insertCategory(iterator);
+        }
     }
 }

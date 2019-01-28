@@ -94,7 +94,7 @@ public class InsightActivity extends AppCompatActivity {
     public void initPieChart(){
 
         // create the dataset
-        PieDataSet dataSet = helper.getPieData(transactions, "Insight");
+        PieDataSet dataSet = helper.getSpendingPieData(transactions, "Insight");
         PieData data = new PieData(dataSet);
         pieChart.setData(data);
 

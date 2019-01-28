@@ -30,10 +30,12 @@ public class CategoryViewActivity extends AppCompatActivity {
             TextView name = findViewById(R.id.nameTextView);
             TextView spendings = findViewById(R.id.spendingTextView);
             ImageView logo = findViewById(R.id.ImageView);
+            TextView description = findViewById(R.id.listDescriptionText);
 
             Drawable drawable = getResources().getDrawable(category.getDrawableID());
             name.setText(category.getName());
             logo.setImageDrawable(drawable);
+            description.setText(String.format("Alle transactions in %s", category.getName()));
 
             ListView listView = findViewById(R.id.listView);
             SQLManager sqlManager = SQLManager.getInstance(this);
@@ -43,7 +45,7 @@ public class CategoryViewActivity extends AppCompatActivity {
             StatisticsHelper helper = new StatisticsHelper();
             double total = helper.getTotal(transactions);
 
-            spendings.setText(String.format("Totaal: %d", total));
+            spendings.setText(String.format("Totaal: %.2f", total));
 
 
 
