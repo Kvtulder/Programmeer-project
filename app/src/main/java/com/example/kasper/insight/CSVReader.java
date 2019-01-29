@@ -42,8 +42,7 @@ public class CSVReader {
                 // skip first line
                 if (headers)
                     headers = false;
-                else
-                {
+                else {
                     String[] args = line.split("\",\"");
 
                     // first and last argument start/end with an ". we need to remove this
@@ -68,20 +67,21 @@ public class CSVReader {
                     TransactionObject object = new TransactionObject(date, IBAN, name, description, amount, negative);
                     sqlManager.insertTransaction(object);
                 }
-
                 line = reader.readLine();
             }
-            //TODO handle errors by implementing a callback
 
         } catch (IOException e) {
-
             callback.onInvalidFile();
         } catch (ParseException e) {
-
             callback.onParseException();
         }
-
         return list;
+    }
+
+    // create callback interface to force proper error handling
+    public interface CSVReaderCallback {
+        void onInvalidFile();
+        void onParseException();
     }
 
 }

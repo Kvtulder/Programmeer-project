@@ -1,10 +1,11 @@
 package com.example.kasper.insight;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class PeriodObject {
+public class PeriodObject implements Serializable {
 
     String format;
     Date start;

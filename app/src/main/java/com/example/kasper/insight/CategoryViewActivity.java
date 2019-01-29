@@ -1,6 +1,5 @@
 package com.example.kasper.insight;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,57 +14,61 @@ import java.util.ArrayList;
 
 public class CategoryViewActivity extends AppCompatActivity {
 
+    private TextView name;
+    private TextView spendings;
+    private ImageView logo;
+    private TextView description;
+    private TransactionListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_view);
         Bundle arguments = getIntent().getExtras();
-        final Context context = this;
 
         // get transaction from bundle
         if(arguments != null)
         {
             CategoryObject category =  (CategoryObject) arguments.getSerializable("category");
 
-            TextView name = findViewById(R.id.nameTextView);
-            TextView spendings = findViewById(R.id.spendingTextView);
-            ImageView logo = findViewById(R.id.ImageView);
-            TextView description = findViewById(R.id.listDescriptionText);
+            // load all the views in the resource file
+            name = findViewById(R.id.nameTextView);
+            spendings = findViewById(R.id.spendingTextView);
+            logo = findViewById(R.id.ImageView);
+            description = findViewById(R.id.listDescriptionText);
 
+            // set all the text/icons of the views
             Drawable drawable = getResources().getDrawable(category.getDrawableID());
             name.setText(category.getName());
             logo.setImageDrawable(drawable);
             description.setText(String.format("Alle transactions in %s", category.getName()));
 
+            // get all the transactions in the category in init the listview
             ListView listView = findViewById(R.id.listView);
             SQLManager sqlManager = SQLManager.getInstance(this);
             ArrayList<TransactionObject> transactions =
-                    sqlManager.getTransactionsWithoutCategoryID(category.getId());
-
-            StatisticsHelper helper = new StatisticsHelper();
-            double total = helper.getTotal(transactions);
-
-            spendings.setText(String.format("Totaal: %.2f", total));
-
-
-
-            final TransactionListAdapter adapter = new TransactionListAdapter(this,transactions);
-
+                    sqlManager.getTransactionsWithCategoryID(category.getId());
+            adapter = new TransactionListAdapter(this,transactions);
             listView.setAdapter(adapter);
 
+            // get total of all the transactions
+            StatisticsHelper helper = new StatisticsHelper();
+            double total = helper.getTotal(transactions);
+            spendings.setText(String.format("Totaal: %.2f", total));
+
+            // set a click listener for the listview
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(context, TransactionViewActivity.class);
 
+                    // start the transaction view activity
+                    Intent intent = new Intent(CategoryViewActivity.this,
+                            TransactionViewActivity.class);
                     TransactionObject transaction = (TransactionObject) adapter.getItem(position);
                     intent.putExtra("transaction", transaction);
                     startActivity(intent);
                 }
             });
-
-
-
         }
     }
 }

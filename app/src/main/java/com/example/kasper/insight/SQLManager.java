@@ -22,7 +22,7 @@ public class SQLManager extends SQLiteOpenHelper {
     private static final String TABLENAME_CATEGORIES = "categories";
     private static final String TABLENAME_LINKED_TRANSACTIONS = "linked_transactions";
 
-    private SQLManager(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+    private SQLManager(Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
 
         // init database
@@ -33,7 +33,7 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 16);
+            instance = new SQLManager(context, DATABASENAME, null, 19);
         return instance;
     }
 
@@ -130,7 +130,7 @@ public class SQLManager extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<TransactionObject> getTransactionsWithoutCategoryID(int ID){
+    public ArrayList<TransactionObject> getTransactionsWithCategoryID(int ID){
 
         String[] whereArgs = {String.format("%d",ID)};
         Cursor cursor = database
@@ -179,7 +179,6 @@ public class SQLManager extends SQLiteOpenHelper {
         categoryData.put("spending", spending);
 
         database.insert(TABLENAME_CATEGORIES, null, categoryData);
-
     }
 
     // Transforms the cursor from the database into an arraylist with transactions
@@ -277,6 +276,8 @@ public class SQLManager extends SQLiteOpenHelper {
                 "spending INT," +
                 "drawable TEXT);";
 
+        db.execSQL(query);
+
         // create linked transations table
         query = "CREATE TABLE " + TABLENAME_LINKED_TRANSACTIONS + "(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -285,32 +286,16 @@ public class SQLManager extends SQLiteOpenHelper {
                 "category_id INT);";
 
         db.execSQL(query);
-
-        // insert default data
-        insertDefaultCategories();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //TODO Only for testing purposes: this deletes all user data!
         // delete database and create again
         db.execSQL("DROP TABLE IF EXISTS " + TABLENAME_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLENAME_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLENAME_LINKED_TRANSACTIONS);
+
         onCreate(db);
 
-    }
-
-    private void insertDefaultCategories(){
-        CategoryObject object1 =
-                new CategoryObject("Algemene inkomsten", Icon.MONEY,true, false);
-        CategoryObject object2 =
-                new CategoryObject("Boodschappen", Icon.CUTLERY, false, true);
-        CategoryObject object3 =
-                new CategoryObject("Huur", Icon.HOME, false, true);
-
-        CategoryObject[] objectArray = {object1, object2, object3};
-        for(CategoryObject iterator : objectArray){
-            insertCategory(iterator);
-        }
     }
 }

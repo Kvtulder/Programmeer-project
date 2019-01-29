@@ -12,14 +12,11 @@ import java.util.ArrayList;
 
 public class CategoryAdapter extends BaseAdapter {
 
-    private SQLManager sqlManager;
     private ArrayList<CategoryObject> categories;
     private int layoutFile;
-
-    Context context;
+    private Context context;
 
     public CategoryAdapter(Context context, int layoutFile, ArrayList<CategoryObject> categories) {
-
         this.context = context;
         this.layoutFile = layoutFile;
         this.categories = categories;
@@ -29,7 +26,7 @@ public class CategoryAdapter extends BaseAdapter {
         categories.add(position, object);
     }
 
-    // overide method for when the object can be inserted at the end
+    // overide method for when the object can be inserted at the end (like a queue)
     public void addPosition(CategoryObject object){
         categories.add(object);
     }
@@ -40,6 +37,7 @@ public class CategoryAdapter extends BaseAdapter {
             if (category.getName().equals(categoryName))
                 return categories.indexOf(category);
         }
+        // nothing found yet: return -1
         return -1;
     }
 
@@ -63,11 +61,13 @@ public class CategoryAdapter extends BaseAdapter {
 
         CategoryObject category = categories.get(position);
 
+        // inflate layout file
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(layoutFile, parent, false);
         }
 
+        // set the icon
         ImageView imageView = convertView.findViewById(R.id.categoryLogo);
         Drawable drawable = context.getResources().getDrawable(category.getDrawableID());
         imageView.setImageDrawable(drawable);

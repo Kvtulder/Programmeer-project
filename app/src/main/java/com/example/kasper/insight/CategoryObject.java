@@ -9,24 +9,24 @@ public class CategoryObject implements Serializable {
     private Icon icon;
     private int[] linkedTransactionAccountIDS;
     private boolean income;
-
     private boolean spending;
 
 
-    // most simple constructor
+    // constructor for objects that are not in the db, so don't have an ID yet
     public CategoryObject(String name, Icon icon, boolean income, boolean spending) {
         this.name = name;
         this.icon = icon;
         this.income =income;
         this.spending = spending;
     }
-
+    // contructor for db objects, they've an ID
     public CategoryObject(int id, String name, Icon icon ,boolean income, boolean spending) {
         this.id = id;
         this.name = name;
         this.icon = icon;
+        this.income = income;
+        this.spending = spending;
     }
-
 
     //TODO imlpement constuctor
     // override constructor

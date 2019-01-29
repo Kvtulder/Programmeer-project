@@ -22,35 +22,13 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/incomeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Inkomsten van deze maand:" />
 
-    <TextView
-        android:id="@+id/spendingTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Uitaven van deze maand:" />
+    <android.support.v4.view.ViewPager
+      android:id="@+id/viewPager"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/piechart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            app:layout_constraintWidth_percent=".25"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:src="@drawable/icon_text"/>
-    </android.support.constraint.ConstraintLayout>
+  </android.support.v4.view.ViewPager>
 
 
 

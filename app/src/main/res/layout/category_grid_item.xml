@@ -10,8 +10,10 @@
 
     <ImageView
         android:id="@+id/categoryLogo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_margin="10dp"
+        android:scaleType="fitCenter"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -20,5 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="TextView"
-        android:textSize="24sp" />
+        android:textSize="18sp"
+        android:lines="2"/>
 </LinearLayout>

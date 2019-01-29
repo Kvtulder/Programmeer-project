@@ -59,7 +59,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
         return fragment;
     }
 
-    public  static class TransactionListFragment extends Fragment{
+    public static class TransactionListFragment extends Fragment{
 
         private TransactionObject transaction;
         private View view;
