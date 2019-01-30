@@ -46,7 +46,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kasper.insight.InsightActivity" />
         </activity>
-        <activity android:name=".CategoryViewActivity" />
+        <activity android:name=".CategoryViewActivity"
+            android:label="@string/title_category_view">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kasper.insight.InsightActivity" />
+        </activity>/>
     </application>
 
 </manifest>
