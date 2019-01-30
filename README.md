@@ -24,3 +24,6 @@ That's all! Go back to the main screen to analyse your financials. Made a mistak
 
 <img src="docs/screenshots/list.png" width="200px">
 
+# credits
+
+Category icons from freepik from flaticon.com
