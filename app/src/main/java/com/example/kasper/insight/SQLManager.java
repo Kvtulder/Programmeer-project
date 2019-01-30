@@ -32,7 +32,7 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 21);
+            instance = new SQLManager(context, DATABASENAME, null, 22);
         return instance;
     }
 

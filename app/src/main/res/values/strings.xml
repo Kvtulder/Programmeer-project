@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Insight</string>
-    <string name="title_activity_transaction_over_view">Transaction Overview</string>
-    <string name="title_activity_csvreader">Read new transactions</string>
-    <string name="title_activity_manage_categories">Categories</string>
-    <string name="title_activity_process_transactions">Process transacions</string>
-    <string name="title_activity_transaction_view">TransactionViewActivity</string>
+    <string name="title_activity_transaction_over_view">Transactie overzicht</string>
+    <string name="title_activity_csvreader">Laad nieuwe transacties in</string>
+    <string name="title_activity_manage_categories">Categoriën</string>
+    <string name="title_activity_process_transactions">Verwerk transacties</string>
+    <string name="title_activity_transaction_view">Bekijk transactie</string>
     <string name="category_icon_description">Category icon</string>
     <string name="income_checkbox">Sta toe om inkomsten op deze categorie te declareren</string>
     <string name="spending_checkbox">Sta toe om uitgaven op deze categorie te declareren</string>
