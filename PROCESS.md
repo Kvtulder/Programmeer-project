@@ -41,35 +41,35 @@ Implemented the category chooser. Nothing changed from inital plan.
 
 The application now has the transaction view activity. 
 
-# day 11
+## day 11
 
 Started working on the date selector. Having some troubles, there is no default android month selector. Thinking if i've to create one by myself or use 2 date selectors.
 
-# day 12/13
+## day 12/13
 
 Created one myself. The app now checks which transaction you've downloaded and returns all the months
 
-# day 14
+## day 14
 
 Hackathon. Restructured the main activity. Now added an on period changed function that refreshes the main activity
 
-# day 15
+## day 15
 
 Better icon selection, now works with an enumeration. A lot of improvements but no big changes from initial plan
 
-# day 15.1 (saturday)
+## day 15.1 (saturday)
 
 Change from inital plan! I implented everythin from day 5. You can now create income and spending categories. There are two tabs, one for both. You can now also analyse your income.
 
-# day 16
+## day 16
 
 Fixing some bugs and design.
 
-# day 17
+## day 17
 
 Fixed the error that prevented one of the piecharts from initialising
 
-# day 18
+## day 18
 
 Last day! Fixed the bug that caused wrong percentages and other improvements
 
