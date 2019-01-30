@@ -37,7 +37,7 @@ public class CategoryAdapter extends BaseAdapter {
             if (category.getName().equals(categoryName))
                 return categories.indexOf(category);
         }
-        // nothing found yet: return -1
+        // nothing found yet: return minus 1
         return -1;
     }
 

@@ -19,6 +19,7 @@ public class NewCategoryActivity extends AppCompatActivity {
         final Spinner imageSelector = findViewById(R.id.imageSelector);
         IconAdapter adapter = new IconAdapter(this);
         imageSelector.setAdapter(adapter);
+
         final SQLManager sqlManager = SQLManager.getInstance(this);
         final TextView nameText = findViewById(R.id.nameText);
 
