@@ -5,4 +5,8 @@
     <string name="title_activity_manage_categories">Categories</string>
     <string name="title_activity_process_transactions">Process transacions</string>
     <string name="title_activity_transaction_view">TransactionViewActivity</string>
+    <string name="category_icon_description">Category icon</string>
+    <string name="income_checkbox">Sta toe om inkomsten op deze categorie te declareren</string>
+    <string name="spending_checkbox">Sta toe om uitgaven op deze categorie te declareren</string>
+    <string name="total_income">Inkomsten van deze maand:</string>
 </resources>

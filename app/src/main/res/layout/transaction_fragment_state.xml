@@ -41,17 +41,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/radioDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Doe dit automatisch wanneer"
-        android:textSize="18sp" />
-
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <RadioButton
             android:id="@+id/neverMatch"

@@ -1,6 +1,7 @@
 package com.example.kasper.insight;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.data.PieDataSet;
 
 import java.util.ArrayList;
 
@@ -38,6 +41,7 @@ public class CategoryViewActivity extends AppCompatActivity {
             description = findViewById(R.id.listDescriptionText);
 
             // set all the text/icons of the views
+
             Drawable drawable = getResources().getDrawable(category.getDrawableID());
             name.setText(category.getName());
             logo.setImageDrawable(drawable);
@@ -52,8 +56,18 @@ public class CategoryViewActivity extends AppCompatActivity {
             listView.setAdapter(adapter);
 
             // get total of all the transactions
-            StatisticsHelper helper = new StatisticsHelper();
-            double total = helper.getTotal(transactions);
+            StatisticsHelper helper = new StatisticsHelper(transactions, true, true);
+            double total = helper.getTotal();
+
+            if(total < 0){
+                spendings.setTextColor(Color.RED);
+                total *= -1; // take absolute value
+            }
+            // don't change color if amount is zero
+            else if (total > 0) {
+                spendings.setTextColor(Color.GREEN);
+            }
+
             spendings.setText(String.format("Totaal: %.2f", total));
 
             // set a click listener for the listview

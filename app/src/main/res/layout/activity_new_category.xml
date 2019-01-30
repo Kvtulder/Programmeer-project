@@ -17,10 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageSelector"
-        android:text="TextView"
         android:textAlignment="center"
 
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        tools:text="Naam"
+        android:inputType=""
+        android:importantForAutofill="no" />
 
     <CheckBox
         android:id="@+id/incomecheckBox"
@@ -28,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/imageSelector"
         android:checked="true"
-        android:text="Sta toe om inkomsten op deze categorie te declareren" />
+        android:text="@string/income_checkbox" />
 
     <CheckBox
         android:id="@+id/spendingCheckbox"
@@ -36,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/incomecheckBox"
         android:checked="true"
-        android:text="Sta toe om uitgaven op deze categorie te declareren" />
+        android:text="@string/spending_checkbox" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingButton"

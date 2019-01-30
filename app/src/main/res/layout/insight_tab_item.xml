@@ -11,7 +11,7 @@
         android:id="@+id/totalText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Inkomsten van deze maand:" />
+        android:text="@string/total_income" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,6 +26,7 @@
             app:layout_constraintWidth_percent=".25"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="-25dp"
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:src="@drawable/icon_text"/>

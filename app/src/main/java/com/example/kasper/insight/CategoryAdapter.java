@@ -41,6 +41,15 @@ public class CategoryAdapter extends BaseAdapter {
         return -1;
     }
 
+    public int getPositionByID(int id){
+        for(CategoryObject category : categories){
+            if (category.getId() == id)
+                return categories.indexOf(category);
+        }
+        // nothing found yet: return -1
+        return -1;
+    }
+
     @Override
     public int getCount() {
         return categories.size();

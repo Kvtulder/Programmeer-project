@@ -11,20 +11,17 @@
         android:id="@+id/transactionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/transactionDate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/transactionDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name"
         android:textSize="14sp" />
 
     <Spinner

@@ -1,6 +1,7 @@
 package com.example.kasper.insight;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -22,32 +24,30 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
-public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
+public class InsightTab extends android.support.v4.app.FragmentPagerAdapter {
 
     private static final int NUM_OF_TABS = 2;
 
     FragmentItem incomeFragment = new FragmentItem();
     FragmentItem spendingFragment = new FragmentItem();
 
-    public FragmentPagerAdapter(FragmentManager fm, PeriodObject period) {
+    public InsightTab(FragmentManager fm, PeriodObject period) {
         super(fm);
 
         // pass period object to the fragments
         Bundle incomeBundle = new Bundle();
         incomeBundle.putSerializable("period", period);
-        incomeBundle.putBoolean("income", true);
+        incomeBundle.putBoolean("income", Boolean.TRUE);
         incomeFragment.setArguments(incomeBundle);
-
 
         Bundle spendingBundle = new Bundle();
         spendingBundle.putSerializable("period", period);
-        incomeBundle.putBoolean("income", false);
+        spendingBundle.putBoolean("income", Boolean.FALSE);
         spendingFragment.setArguments(spendingBundle);
     }
 
     @Override
     public Fragment getItem(int i) {
-
         if(i == 0)
             return incomeFragment;
         else
@@ -64,14 +64,12 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
         // init variables
         private PieChart pieChart;
         private SQLManager sqlManager;
-        private StatisticsHelper helper = new StatisticsHelper();
+        private StatisticsHelper helper;
         private TextView totalText;
 
         // set default to income fragment
-        private Boolean income = Boolean.TRUE;
-
+        private Boolean income;
         private ArrayList<TransactionObject> transactions;
-
 
         @Nullable
         @Override
@@ -85,38 +83,38 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
 
             // renew the transaction list to the selected period
             Bundle arguments = getArguments();
-            if(arguments != null) {
-                PeriodObject period = (PeriodObject) arguments.getSerializable("period");
-                income = arguments.getBoolean("income");
-                onPeriodChanged(period);
-            }
+            if(arguments == null)
+                return view;
+
+
+            PeriodObject period = (PeriodObject) arguments.getSerializable("period");
+            income = arguments.getBoolean("income");
+            onPeriodChanged(period);
             return view;
         }
 
         public void onPeriodChanged(PeriodObject period){
+            transactions = sqlManager.getTransactionsByPeriod(period);
+            helper = new StatisticsHelper(transactions, !income, income);
 
-
-            if(income){
-                transactions = sqlManager.getTransactionsByPeriod(period);
-                totalText.setText("Inkomsten deze maand: " + helper.getTotal(transactions));
-            }
-            else{
-                transactions = sqlManager.getTransactionsByPeriod(period);
-                totalText.setText("Uitgaven deze maand: " + helper.getTotal(transactions));
-
-            }
-
+            if(income)
+                totalText.setText(String.format("Inkomsten deze maand: %.2f", helper.getTotal()));
+            else
+                totalText.setText(String.format("Uitgaven deze maand: %.2f", helper.getTotal() * -1));
             // renew the piechart
-            initPieChart();
-
+            initPieChart(income);
         }
 
         // draw the pie chart
-        public void initPieChart(){
+        public void initPieChart(boolean income){
 
             // create the dataset
-            PieDataSet dataSet = helper.getSpendingPieData(transactions, "Insight");
+            PieDataSet dataSet = helper.getPieData("");
+            dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
             PieData data = new PieData(dataSet);
+            data.setValueTextSize(14);
+            data.setValueTextColor(Color.WHITE);
             pieChart.setData(data);
 
             // set the visuals
@@ -124,9 +122,11 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
             dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
             pieChart.setHoleRadius(45f);
             pieChart.setRotationEnabled(false);
-
+            Description description = new Description();
+            description.setEnabled(false);
+            pieChart.setDescription(description);
+            pieChart.setUsePercentValues(true);
             pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
                 // guide the user to the category activity when clicked on a piechart category
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
@@ -136,17 +136,13 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
                     Intent intent = new Intent(getContext(), CategoryViewActivity.class);
                     intent.putExtra("category", category);
                     startActivity(intent);
-
                 }
 
                 @Override
                 public void onNothingSelected() {
                     // never gets called because we start a new activity when a value is selected
-
                 }
             });
-
         }
-
     }
 }

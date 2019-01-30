@@ -1,6 +1,5 @@
 package com.example.kasper.insight;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -26,7 +25,7 @@ public class InsightActivity extends AppCompatActivity {
     int CSVREADREQUESTCODE = 1;
 
     private ArrayList<TransactionObject> transactions;
-    private FragmentPagerAdapter.FragmentItem item;
+    private InsightTab.FragmentItem item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class InsightActivity extends AppCompatActivity {
 
 
         PeriodObject period = (PeriodObject) spinner.getSelectedItem();
-        final FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager(), period);
+        final InsightTab adapter = new InsightTab(getSupportFragmentManager(), period);
         final ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(adapter);
 
@@ -69,9 +68,27 @@ public class InsightActivity extends AppCompatActivity {
         actionBar.addTab(actionBar.newTab().setText("Inkomsten").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("Uitgaven").setTabListener(tabListener));
 
+        // make sure the selected tab changes when the user swipes
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                // no need to do anything, user is scrolling but isn't finished
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                actionBar.getTabAt(i).select();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                // no need to do anything
+            }
+        });
+
         // create an reference the the open fragment
         int position = viewPager.getCurrentItem();
-        item = (FragmentPagerAdapter.FragmentItem) adapter.getItem(position);
+        item = (InsightTab.FragmentItem) adapter.getItem(position);
 
         // set an on item listener for the dropdown menu
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -158,6 +175,5 @@ public class InsightActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             Toast.makeText(this, "Can't find selected file!", Toast.LENGTH_LONG).show();
         }
-
     }
 }

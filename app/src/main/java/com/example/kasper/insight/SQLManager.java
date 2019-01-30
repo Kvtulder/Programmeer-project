@@ -16,7 +16,6 @@ public class SQLManager extends SQLiteOpenHelper {
     private static SQLManager instance;
     private SQLiteDatabase database;
 
-
     private static final String DATABASENAME = "InsightDB";
     private static final String TABLENAME_TRANSACTIONS = "transactions";
     private static final String TABLENAME_CATEGORIES = "categories";
@@ -33,10 +32,36 @@ public class SQLManager extends SQLiteOpenHelper {
     public static SQLManager getInstance(Context context){
 
         if(instance == null)
-            instance = new SQLManager(context, DATABASENAME, null, 19);
+            instance = new SQLManager(context, DATABASENAME, null, 21);
         return instance;
     }
 
+    public int getLinkedCategoryID(String IBAN, double transactionAmount){
+        String[] args = {IBAN, String.format("%d",transactionAmount)};
+        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLENAME_LINKED_TRANSACTIONS + " WHERE 'iban' = ?", args);
+
+        // iban has unique identifier so we have only 0 or 1 results
+        if(cursor.getCount() == 1){
+            cursor.moveToFirst();
+            double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
+            int id = cursor.getInt(cursor.getColumnIndex("category_id"));
+
+            // if there's no amount specified we've a match!
+            if (amount == 0 || amount == transactionAmount)
+                return id;
+        }
+       // no match, return minus 1
+        return -1;
+    }
+
+    public void insertLinkedCategory(String IBAN, double transactionAmount, int categoryID){
+        ContentValues data = new ContentValues();
+        data.put("iban", IBAN);
+        data.put("amount", transactionAmount);
+        data.put("category_id", categoryID);
+
+        database.insert(TABLENAME_LINKED_TRANSACTIONS, null, data);
+    }
 
     // returns the date of the oldest transaction
     public Long getOldestTransaction(){
@@ -50,7 +75,6 @@ public class SQLManager extends SQLiteOpenHelper {
             cursor.moveToFirst();
             return cursor.getLong(cursor.getColumnIndex("date"));
         }
-
     }
 
     public Boolean setTransactionCategory(TransactionObject transaction, int categoryID){
@@ -128,7 +152,6 @@ public class SQLManager extends SQLiteOpenHelper {
         else
             return list.get(0);
     }
-
 
     public ArrayList<TransactionObject> getTransactionsWithCategoryID(int ID){
 
@@ -218,7 +241,6 @@ public class SQLManager extends SQLiteOpenHelper {
     public ArrayList<CategoryObject> cursorToCategoryList(Cursor cursor){
 
         ArrayList<CategoryObject> list = new ArrayList<>();
-
         if(cursor.moveToFirst()) {
 
             // loop as long as there still are rows left
@@ -247,9 +269,7 @@ public class SQLManager extends SQLiteOpenHelper {
             //remove from memory
             cursor.close();
         }
-
         return list;
-
     }
 
     @Override
@@ -280,10 +300,9 @@ public class SQLManager extends SQLiteOpenHelper {
 
         // create linked transations table
         query = "CREATE TABLE " + TABLENAME_LINKED_TRANSACTIONS + "(" +
-                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "iban TEXT NOT NULL," +
+                "iban TEXT PRIMARY KEY," +
                 "amount DOUBLE," +
-                "category_id INT);";
+                "category_id INT DEFAULT 0);";
 
         db.execSQL(query);
     }

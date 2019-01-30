@@ -69,6 +69,7 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
         private RadioButton ibanMatch;
         private RadioButton ibanAmountMatch;
         private RadioButton neverMatch;
+        private RadioGroup radioGroup;
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,14 +94,15 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             ibanAmountMatch = view.findViewById(R.id.amountIbanMatch);
             ibanMatch = view.findViewById(R.id.ibanMatch);
             neverMatch = view.findViewById(R.id.neverMatch);
+            radioGroup = view.findViewById(R.id.radioGroup);
 
             name.setText(transaction.getName());
             description.setText(transaction.getDescription());
             amount.setText(String.format("%.2f,-", transaction.getAmount()));
 
-            ArrayList<CategoryObject> categories;
+            final ArrayList<CategoryObject> categories;
 
-            SQLManager sqlManager = SQLManager.getInstance(getContext());
+            final SQLManager sqlManager = SQLManager.getInstance(getContext());
 
             if(transaction.isNegative())
                 categories = sqlManager.getIncomeCategories();
@@ -119,8 +121,34 @@ public class TransactionFragmentStatePagerAdapter  extends FragmentStatePagerAda
             // check if there is already a default category
             if (transaction.getCategory() != null){
                 int position = adapter.getPosition(transaction.getCategory().getName());
+
+                // check if there is a linked category
+                int id = sqlManager.getLinkedCategoryID(transaction.getIBAN(), transaction.getAmount());
+
+                if(id != -1){
+                    position = adapter.getPositionByID(id);
+                }
                 spinner.setSelection(position);
             }
+
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                    CategoryObject category = (CategoryObject) spinner.getSelectedItem();
+                    switch (checkedId){
+                        case R.id.neverMatch:
+                            sqlManager.insertLinkedCategory(transaction.getIBAN(), 0, -1);
+                            break;
+                        case R.id.ibanMatch:
+                            sqlManager.insertLinkedCategory(transaction.getIBAN(), 0, category.getId());
+                            break;
+                        case R.id.amountIbanMatch:
+                            sqlManager.insertLinkedCategory(transaction.getIBAN(), transaction.getAmount(), category.getId());
+
+                    }
+                }
+            });
 
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

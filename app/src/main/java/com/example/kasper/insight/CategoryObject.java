@@ -7,10 +7,8 @@ public class CategoryObject implements Serializable {
     private int id;
     private String name;
     private Icon icon;
-    private int[] linkedTransactionAccountIDS;
     private boolean income;
     private boolean spending;
-
 
     // constructor for objects that are not in the db, so don't have an ID yet
     public CategoryObject(String name, Icon icon, boolean income, boolean spending) {
@@ -28,24 +26,12 @@ public class CategoryObject implements Serializable {
         this.spending = spending;
     }
 
-    //TODO imlpement constuctor
-    // override constructor
-    public CategoryObject(String name, Icon icon, int[] linkedTransactionAccountIDS) {
-        this.name = name;
-        this.icon = icon;
-        this.linkedTransactionAccountIDS = linkedTransactionAccountIDS;
-    }
-
     public String getName() {
         return name;
     }
 
     public int getDrawableID() {
         return icon.getResource();
-    }
-
-    public int[] getLinkedTransactionAccountIDS() {
-        return linkedTransactionAccountIDS;
     }
 
     public Icon getIcon() {
