@@ -81,6 +81,6 @@ Gives the user information about a single transaction. It has two textviews to d
 
 ### Process transactions activity
 
-
+This activity lets the user categorise uncategorised transactions. It contains a viewpager. TransactionFragmentStatePagerAdapter.java initialised the viewpager. 
 
 # spending and income
