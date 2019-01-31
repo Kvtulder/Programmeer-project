@@ -83,4 +83,12 @@ Gives the user information about a single transaction. It has two textviews to d
 
 This activity lets the user categorise uncategorised transactions. It contains a viewpager. TransactionFragmentStatePagerAdapter.java initialised the viewpager. 
 
-# spending and income
+## Challenges and big changes
+
+There were a few challenges while developing this application. The first dissapointment was not being able to connect to the ING API. Luckily, there was a good alternative availeble: downloading and importing transaction trough a CSV file. This is not as easy as logging in through the app but it'll still give you the same analysis, what is the main goal of Insight. 
+
+The second challenge was implementing income transactions. I hadn't thought about this while creating the proposal document. The initial plan was to only show one expenses piechart en neglect the income. But this has a big disadvantage, if you lend somebody some money than it will show on the pie chart, even if that person already paid you back . This is why i've chosen to implement two piecharts, one for expenses and one for income. Income shows all the categories that have an positive sum, and the other piechart shows the categories with an negative sum. I think this is a lot better than the initial plan and is a nice feature.
+
+The last big challenge was implementing the period selector. I thought that I could just use the android date dialog, but this wouldn't be easy to use: you'ld have to select two dates instead of just a month. That's why've decided to create a custom spinner. The applications checks in what months you've imported transactions and returns those months in a spinner. It's really easy to use and prevents the user from selecting month in which no data is available. It also has a disadvantage: it's not possible to select a custom period anymore, like analysing the first 10 days of a month. I wanted to implement both options but there was not enough time to do both.
+
+I also proposed an optional feature in the design document: automatically selecting a category if the transaction account number and/or amount matches another transaction. Sadly, I didn't have enough time to implement this. 
