@@ -71,5 +71,16 @@ Creates a new category. When the user presses the store button, it calss SQLMana
 
 Shows the user the selected category. It contains an imageview, to textviews and a listview. It calls StatisticsHelper.java to get the sum of all the transactions and TransactionListAdadapter.java to initialise the list.
 
+### Transaction overview Acitivty
+
+Generated a list with all the transactions. It only containts a listview. It calls TransactionListAdapter.java to initialise the lsit. When the user clicks on a list item, it is redirected to the transaction view activity
+
+### Transaction view activity
+
+Gives the user information about a single transaction. It has two textviews to display the name and the description. It also has a spiner to change the corresponding category. The spinner calls the CategoryAdapter.java
+
+### Process transactions activity
+
+
 
 # spending and income
