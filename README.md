@@ -27,3 +27,5 @@ That's all! Go back to the main screen to analyse your financials. Made a mistak
 # credits
 
 Category icons from freepik from flaticon.com
+
+Demo video: https://youtu.be/Dr4CpIBgJKQ
